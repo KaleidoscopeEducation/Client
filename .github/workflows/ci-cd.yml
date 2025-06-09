@@ -11,7 +11,7 @@ permissions:
 
 env:
   ACR_NAME: kaleidoscopeaieducation               # can change if container repo changes in azure
-  ACR_LOGIN: ${{ env.ACR_NAME }}.azurecr.io
+  ACR_LOGIN: kaleidoscopeaieducation.azurecr.io
   RG_CORE:  main-container-repo
   BICEP_FILE: infra/main.bicep
   APP_IMAGE: libreclient
