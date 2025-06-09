@@ -10,8 +10,8 @@ permissions:
   packages: write
 
 env:
-  ACR_NAME: kaleidoscopeaieducation               # can change if container repo changes in azure
-  ACR_LOGIN: kaleidoscopeaieducation.azurecr.io
+  ACR_NAME: kaleidoscopeaieducation-ajfgb4ceepedbyc5              # can change if container repo changes in azure
+  ACR_LOGIN: kaleidoscopeaieducation-ajfgb4ceepedbyc5.azurecr.io
   RG_CORE:  main-container-repo
   BICEP_FILE: infra/main.bicep
   APP_IMAGE: libreclient
