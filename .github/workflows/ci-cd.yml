@@ -10,11 +10,11 @@ permissions:
   packages: write
 
 env:
-  ACR_NAME: myprodacr               # <— change if needed
+  ACR_NAME: kaleidoscopeaieducation               # can change if container repo changes in azure
   ACR_LOGIN: ${{ env.ACR_NAME }}.azurecr.io
-  RG_CORE:  rg-chat-core
+  RG_CORE:  main-container-repo
   BICEP_FILE: infra/main.bicep
-  APP_IMAGE: librechat
+  APP_IMAGE: libreclient
 
 jobs:
   build-and-deploy:
