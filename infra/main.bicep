@@ -1,5 +1,5 @@
 param location string = resourceGroup().location
-param acrName    string = 'kaleidoscopeaieducation'
+param acrName    string = 'kaleidoscopeaieducation-ajfgb4ceepedbyc5'
 param imageTag   string          // passed from GitHub action
 
 var acrLogin = '${acrName}.azurecr.io'
