@@ -42,11 +42,12 @@ jobs:
       - name: Deploy to ACA via Bicep
         run: |
           az deployment group create \
-            --resource-group $RG_CORE \
-            --template-file $BICEP_FILE \
-            --parameters \
-                acrName=$ACR_NAME \
-                imageRepo=$ACR_LOGIN/$APP_IMAGE \
-                imageTag=${{ github.sha }} \
-                mongoUri=${{ secrets.MONGO_URI }} \
-                openaiApiKey=${{ secrets.OPENAI_API_KEY }}
+            --resource-group "$RG_CORE" \
+            --template-file "$BICEP_FILE" \
+            --parameters "
+              acrName=$ACR_NAME
+              imageRepo=$ACR_LOGIN/$APP_IMAGE
+              imageTag=${{ github.sha }}
+              mongoUri='${{ secrets.MONGO_URI }}'
+              openaiApiKey='${{ secrets.OPENAI_API_KEY }}'
+            "
