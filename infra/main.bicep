@@ -1,33 +1,22 @@
-param location string = resourceGroup().location
+// ── PARAMETERS ────────────────────────────────────────────────────────────────
+param location   string = resourceGroup().location
 param acrName    string = 'kaleidoscopeaieducation-ajfgb4ceepedbyc5'
-param imageTag   string          // passed from GitHub action
+param imageRepo  string          // ✅ new – full repo, e.g. "…azurecr.io/libreclient"
+param imageTag   string          // passed from the workflow
 
-var acrLogin = '${acrName}.azurecr.io'
+// ── CONSTANTS / VARS ─────────────────────────────────────────────────────────
+var acrLogin = '${acrName}.azurecr.io'      // still useful for registry block
 var logName  = 'law-librechat'
 var envName  = 'cae-librechat'
 var appName  = 'libreclient'
 
-resource logs 'Microsoft.OperationalInsights/workspaces@2023-04-01' = {
-  name: logName
-  location: location
-  sku: { name: 'PerGB2018' }
-}
+// ── LOG ANALYTICS ────────────────────────────────────────────────────────────
+resource logs 'Microsoft.OperationalInsights/workspaces@2023-04-01' = { … }
 
-resource env 'Microsoft.App/managedEnvironments@2025-01-01' = {
-  name: envName
-  location: location
-  properties: {
-    appLogsConfiguration: {
-      destination: 'log-analytics'
-      logAnalyticsConfiguration: {
-        customerId: logs.properties.customerId
-        sharedKey: logs.listKeys().primarySharedKey
-      }
-    }
-  }
-  identity: { type: 'SystemAssigned' }
-}
+// ── CONTAINER APPS ENV ───────────────────────────────────────────────────────
+resource env  'Microsoft.App/managedEnvironments@2025-01-01' = { … }
 
+// ── THE LIBRECHAT APP ────────────────────────────────────────────────────────
 resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
   name: appName
   location: location
@@ -42,19 +31,19 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
       registries: [
         {
           server: acrLogin
-          identity: 'SystemAssigned'        // ACA pulls with its own MSI
+          identity: 'SystemAssigned'
         }
       ]
       secrets: [
-        { name: 'MONGO_URI',        value: '<your-mongo-conn-string>' }
-        { name: 'OPENAI_API_KEY',   value: '<openai-key>' }
+        { name: 'MONGO_URI',      value: '<your-mongo-conn-string>' }
+        { name: 'OPENAI_API_KEY', value: '<openai-key>' }
       ]
     }
     template: {
       containers: [
         {
           name: 'web'
-          image: '${acrLogin}/librechat:${imageTag}'
+          image: '${imageRepo}:${imageTag}'   // ✅ uses the new parameter
           env: [
             { name: 'MONGO_URI',      secretRef: 'MONGO_URI' }
             { name: 'OPENAI_API_KEY', secretRef: 'OPENAI_API_KEY' }
@@ -67,7 +56,11 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
         rules: [
           {
             name: 'http'
-            http: { concurrentRequests: 10 }
+            http: {
+              metadata: {                // ✅ new schema (2024-05+)
+                concurrentRequests: '10'
+              }
+            }
           }
         ]
       }
