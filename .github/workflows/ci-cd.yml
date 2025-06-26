@@ -45,7 +45,7 @@ jobs:
             --resource-group $RG_CORE \
             --template-file $BICEP_FILE \
             --parameters \
-                acrName=$ACR_LOGIN \
+                acrName=$ACR_NAME \
                 imageRepo=$ACR_LOGIN/$APP_IMAGE \
                 imageTag=${{ github.sha }} \
                 mongoUri=${{ secrets.MONGO_URI }} \
