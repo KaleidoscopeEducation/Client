@@ -30,7 +30,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       # 2. ACR login (token comes from az CLI session)
       - name: ACR login
-        run: az acr login --name $ACR_NAME --expose-token
+        run: az acr login --name $ACR_NAME
 
       # 3. Build & push the Docker image
       - name: Build & Push image
