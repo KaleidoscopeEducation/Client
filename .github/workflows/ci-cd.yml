@@ -39,10 +39,14 @@ jobs:
           docker push $ACR_LOGIN/$APP_IMAGE:${{ github.sha }}
 
       # 4. Deploy / update ACA via Bicep
-      - name: Bicep deploy
+      - name: Deploy to ACA via Bicep
         run: |
           az deployment group create \
             --resource-group $RG_CORE \
             --template-file $BICEP_FILE \
-            --parameters imageTag=${{ github.sha }} \
-                         imageRepo=$ACR_LOGIN/$APP_IMAGE
+            --parameters \
+                acrName=$ACR_LOGIN \
+                imageRepo=$ACR_LOGIN/$APP_IMAGE \
+                imageTag=${{ github.sha }} \
+                mongoUri=${{ secrets.MONGO_URI }} \
+                openaiApiKey=${{ secrets.OPENAI_API_KEY }}
