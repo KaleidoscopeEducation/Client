@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 permissions:
-  id-token: write        # for OIDC
+  id-token: write
   contents: read
   packages: write
 
@@ -21,7 +21,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       # 1. Login to Azure via OIDC
       - name: Azure Login (OIDC)
         uses: azure/login@v2
@@ -29,10 +28,9 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
       # 2. ACR login (token comes from az CLI session)
       - name: ACR login
-        run: az acr login --name $ACR_NAME
+        run: az acr login --name $ACR_NAME --expose-token
 
       # 3. Build & push the Docker image
       - name: Build & Push image
@@ -46,4 +44,5 @@ jobs:
           az deployment group create \
             --resource-group $RG_CORE \
             --template-file $BICEP_FILE \
-            --parameters imageTag=${{ github.sha }}
+            --parameters imageTag=${{ github.sha }} \
+                         imageRepo=$ACR_LOGIN/$APP_IMAGE
