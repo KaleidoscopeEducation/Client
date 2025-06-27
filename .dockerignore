@@ -18,3 +18,4 @@ docs
 
 #keep the following files
 !.env.prod
+!librechat.yaml
