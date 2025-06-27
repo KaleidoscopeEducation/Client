@@ -10,7 +10,7 @@ permissions:
 
 env:
   ACR_NAME:  kaleidoscopeaieducation-ajfgb4ceepedbyc5
-  ACR_LOGIN: $ACR_NAME.azurecr.io
+  ACR_LOGIN: kaleidoscopeaieducation-ajfgb4ceepedbyc5.azurecr.io
   RG_CORE:   main-container-repo
   BICEP_FILE: infra/main.bicep
   APP_IMAGE: libreclient
