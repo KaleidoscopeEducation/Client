@@ -38,16 +38,23 @@ jobs:
           docker build -t $ACR_LOGIN/$APP_IMAGE:${{ github.sha }} .
           docker push $ACR_LOGIN/$APP_IMAGE:${{ github.sha }}
 
-      # 4. Deploy / update ACA via Bicep
+      # ── 5. Build parameter file for the Bicep deploy ─────────
+      - name: Build parameter file
+        run: |
+          cat > deploy-params.json <<EOF
+          {
+            "acrName":      { "value": "$ACR_NAME" },
+            "imageRepo":    { "value": "$ACR_LOGIN/$APP_IMAGE" },
+            "imageTag":     { "value": "${{ github.sha }}" },
+            "mongoUri":     { "value": "${{ secrets.MONGO_URI }}" },
+            "openaiApiKey": { "value": "${{ secrets.OPENAI_API_KEY }}" }
+          }
+          EOF
+
+      # ── 6. Deploy / update ACA via Bicep ─────────────────────
       - name: Deploy to ACA via Bicep
         run: |
           az deployment group create \
             --resource-group "$RG_CORE" \
             --template-file "$BICEP_FILE" \
-            --parameters "
-              acrName=$ACR_NAME
-              imageRepo=$ACR_LOGIN/$APP_IMAGE
-              imageTag=${{ github.sha }}
-              mongoUri='${{ secrets.MONGO_URI }}'
-              openaiApiKey='${{ secrets.OPENAI_API_KEY }}'
-            "
+            --parameters @deploy-params.json
