@@ -4,7 +4,7 @@
 
 // ========== Parameters ==========
 @description('Azure region where all resources will be created')
-param location string = resourceGroup().location   // e.g. "norwayeast"
+param location string = resourceGroup().location   
 
 @description('Short ACR resource name ( **without** ".azurecr.io" )')
 param acrName string                              // e.g. "kaleidoscopeaieducation-ajfgb4ceepedbyc5"
@@ -29,7 +29,12 @@ var acrLoginServer = '${acrName}.azurecr.io'
 var logAnalyticsName = 'law-librechat'
 var acaEnvName       = 'env-librechat'
 var acaAppName       = 'libreclient'
+var acrPullRoleId    = '7f951dda-4ed3-4680-a7ca-43fe172d538d'
 
+
+resource acr 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' existing = {
+  name: acrName                                                                        
+}
 
 // ========== Log Analytics ==========
 resource logWs 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
@@ -76,7 +81,7 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
       registries: [
         {
           server:   acrLoginServer
-          identity: 'SystemAssigned'     // ACA pulls with its own MSI
+          identity: 'system'     // ACA pulls with its own MSI
         }
       ]
       secrets: [
@@ -118,6 +123,19 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
       }
     }
   }
+}
+
+resource acrPullRA 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
+  name: guid(acr.id, acaAppName, 'AcrPull')
+  scope: acr
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', acrPullRoleId)
+    principalId:      app.identity.principalId
+    principalType:    'ServicePrincipal'
+  }
+  dependsOn: [
+    app
+  ]
 }
 
 // ========== Outputs ==========
