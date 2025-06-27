@@ -1,5 +1,4 @@
 name: Build & Deploy LibreChat
-
 on:
   push:
     branches: [main]
@@ -10,9 +9,9 @@ permissions:
   packages: write
 
 env:
-  ACR_NAME: kaleidoscopeaieducation             # can change if container repo changes in azure
+  ACR_NAME:  kaleidoscopeaieducation
   ACR_LOGIN: kaleidoscopeaieducation-ajfgb4ceepedbyc5.azurecr.io
-  RG_CORE:  main-container-repo
+  RG_CORE:   main-container-repo
   BICEP_FILE: infra/main.bicep
   APP_IMAGE: libreclient
 
@@ -20,47 +19,50 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      # 1. Login to Azure via OIDC
-      - name: Azure Login (OIDC)
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      # 2. ACR login (token comes from az CLI session)
+    - uses: actions/checkout@v4
 
-      - name: Downgrade Azure CLI (work-around for #31581)
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install --yes azure-cli=2.72.0-1~$(lsb_release -cs)
-          az --version   # confirm
-      - name: ACR login
-        run: az acr login --name $ACR_NAME
+    # 1️⃣  Azure OIDC login (uses stock CLI)
+    - name: Azure login (OIDC)
+      uses: azure/login@v2
+      with:
+        client-id:       ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id:       ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # 3. Build & push the Docker image
-      - name: Build & Push image
-        run: |
-          docker build -t $ACR_LOGIN/$APP_IMAGE:${{ github.sha }} .
-          docker push $ACR_LOGIN/$APP_IMAGE:${{ github.sha }}
+    # 2️⃣  Remove stock CLI & install 2.72.0 from PyPI  ← **WORK-AROUND**
+    - name: Pin Azure CLI to 2.72.0
+      run: |
+        sudo apt-get remove -y azure-cli
+        python -m pip install --quiet --no-cache-dir "azure-cli==2.72.0"
+        az --version | head -2        # confirm 2.72.0
 
-      # ── 5. Build parameter file for the Bicep deploy ─────────
-      - name: Build parameter file
-        run: |
-          cat > deploy-params.json <<EOF
-          {
-            "acrName":      { "value": "$ACR_NAME" },
-            "imageRepo":    { "value": "$ACR_LOGIN/$APP_IMAGE" },
-            "imageTag":     { "value": "${{ github.sha }}" },
-            "mongoUri":     { "value": "${{ secrets.MONGO_URI }}" },
-            "openaiApiKey": { "value": "${{ secrets.OPENAI_API_KEY }}" }
-          }
-          EOF
+    # 3️⃣  ACR login
+    - name: ACR login
+      run: az acr login --name $ACR_NAME
 
-      # ── 6. Deploy / update ACA via Bicep ─────────────────────
-      - name: Deploy to ACA via Bicep
-        run: |
-          az deployment group create \
-            --resource-group "$RG_CORE" \
-            --template-file "$BICEP_FILE" \
-            --parameters @deploy-params.json
+    # 4️⃣  Build & push image
+    - name: Build & push image
+      run: |
+        docker build -t $ACR_LOGIN/$APP_IMAGE:${{ github.sha }} .
+        docker push  $ACR_LOGIN/$APP_IMAGE:${{ github.sha }}
+
+    # 5️⃣  Create JSON parameter file
+    - name: Build parameter file
+      run: |
+        cat > deploy-params.json <<EOF
+        {
+          "acrName":      { "value": "$ACR_NAME" },
+          "imageRepo":    { "value": "$ACR_LOGIN/$APP_IMAGE" },
+          "imageTag":     { "value": "${{ github.sha }}" },
+          "mongoUri":     { "value": "${{ secrets.MONGO_URI }}" },
+          "openaiApiKey": { "value": "${{ secrets.OPENAI_API_KEY }}" }
+        }
+        EOF
+
+    # 6️⃣  Deploy Bicep
+    - name: Deploy to ACA
+      run: |
+        az deployment group create \
+          --resource-group "$RG_CORE" \
+          --template-file "$BICEP_FILE" \
+          --parameters @deploy-params.json
