@@ -56,6 +56,7 @@ jobs:
           "imageTag":     { "value": "${{ github.sha }}" },
           "mongoUri":     { "value": "${{ secrets.MONGO_URI }}" },
           "openaiApiKey": { "value": "${{ secrets.OPENAI_API_KEY }}" }
+          "encryptionKey": { "value": "${{ secrets.ENCRYPTION_KEY }}" }
         }
         EOF
 

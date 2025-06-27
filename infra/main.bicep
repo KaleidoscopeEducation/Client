@@ -24,6 +24,10 @@ param mongoUri string
 @description('OpenAI API key (or Azure OpenAI key)')
 param openaiApiKey string
 
+@secure()
+@description('Encryption key github secret')
+param encryptionKey string
+
 
 // ========== Reusable names ==========
 // var acrLoginServer = '${acrName}.azurecr.io'
@@ -95,6 +99,10 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
           name:  'openai-api-key'
           value: openaiApiKey
         }
+        {
+          name: 'encryption-key'
+          value: encryptionKey
+        }
       ]
     }
 
@@ -106,6 +114,7 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
           env: [
             { name: 'MONGO_URI',      secretRef: 'mongo-uri'      }
             { name: 'OPENAI_API_KEY', secretRef: 'openai-api-key' }
+            { name: 'ENCRYPTION_KEY', secretRef: 'encryption-key' }
           ]
         }
       ]
