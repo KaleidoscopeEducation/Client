@@ -127,18 +127,18 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
   }
 }
 
-resource acrPullRA 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
-  name: guid(acr.id, acaAppName, 'AcrPull')
-  scope: acr
-  properties: {
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', acrPullRoleId)
-    principalId:      app.identity.principalId
-    principalType:    'ServicePrincipal'
-  }
-  dependsOn: [
-    app
-  ]
-}
+// resource acrPullRA 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
+//   name: guid(acr.id, acaAppName, 'AcrPull')
+//   scope: acr
+//   properties: {
+//     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', acrPullRoleId)
+//     principalId:      app.identity.principalId
+//     principalType:    'ServicePrincipal'
+//   }
+//   dependsOn: [
+//     app
+//   ]
+// }
 
 // ========== Outputs ==========
 output containerAppUrl string = app.properties.configuration.ingress.fqdn
