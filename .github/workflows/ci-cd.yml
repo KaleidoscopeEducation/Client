@@ -60,7 +60,7 @@ jobs:
           "credsKey":      { "value": "${{ secrets.CREDS_KEY }}" },
           "credsIv":       { "value": "${{ secrets.CREDS_IV }}" },
           "jwtSecret":     { "value": "${{ secrets.JWT_SECRET }}" },
-          "jwtRefreshSecret":  { "value": "${{ secrets.JWT_REFRESH_SECRET }}" }
+          "jwtRefreshSecret":  { "value": "${{ secrets.JWT_REFRESH_SECRET }}" },
           "smtpUser":     { "value": "${{ secrets.EMAIL_USERNAME }}" },
           "smtpPass":     { "value": "${{ secrets.EMAIL_PASSWORD }}" }
         }
