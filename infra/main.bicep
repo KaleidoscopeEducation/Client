@@ -76,7 +76,7 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
     configuration: {
       ingress: {
         external: true
-        targetPort: 3000
+        targetPort: 3080
       }
       registries: [
         {
