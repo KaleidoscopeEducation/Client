@@ -7,7 +7,8 @@
 param location string = resourceGroup().location   
 
 @description('Short ACR resource name ( **without** ".azurecr.io" )')
-param acrName string                              // e.g. "kaleidoscopeaieducation-ajfgb4ceepedbyc5"
+// param acrName string                              // e.g. "kaleidoscopeaieducation-ajfgb4ceepedbyc5"
+param acrName string = 'kaleidoscopeaieducation' 
 
 @description('Repository part of the image, e.g. "<acr>.azurecr.io/libreclient"')
 param imageRepo string
@@ -101,7 +102,7 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
       containers: [
         {
           name:  'web'
-          image: '${acrLoginServer}:${imageTag}'
+          image: '${acrLoginServer}/libreclient:${imageTag}'
           env: [
             { name: 'MONGO_URI',      secretRef: 'mongo-uri'      }
             { name: 'OPENAI_API_KEY', secretRef: 'openai-api-key' }
