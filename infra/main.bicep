@@ -31,7 +31,7 @@ var acaEnvName       = 'env-librechat'
 var acaAppName       = 'libreclient'
 var acrPullRoleId    = '7f951dda-4ed3-4680-a7ca-43fe172d538d'
 var acrLoginServer = 'kaleidoscopeaieducation-ajfgb4ceepedbyc5.azurecr.io'
-var shortAcrName = 'kaleidoscopeaieducation'
+var shortAcrName = 'kaleidoscopeaieducation.azurecr.io'
 
 resource acr 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' existing = {
   name: acrName                                                                        
