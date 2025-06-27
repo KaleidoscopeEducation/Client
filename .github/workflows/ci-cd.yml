@@ -58,7 +58,9 @@ jobs:
           "openaiApiKey": { "value": "${{ secrets.OPENAI_API_KEY }}" },
           "encryptionKey": { "value": "${{ secrets.ENCRYPTION_KEY }}" },
           "credsKey":      { "value": "${{ secrets.CREDS_KEY }}" },
-          "credsIv":       { "value": "${{ secrets.CREDS_IV }}" }
+          "credsIv":       { "value": "${{ secrets.CREDS_IV }}" },
+          "jwtSecret":     { "value": "${{ secrets.JWT_SECRET }}" },
+          "jwtRefreshSecret":  { "value": "${{ secrets.JWT_REFRESH_SECRET }}" }
         }
         EOF
         cat deploy-params.json 

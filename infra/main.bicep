@@ -37,6 +37,14 @@ param credsKey string
 @description('Credentials IV for the client')
 param credsIv string
 
+@secure()
+@description('JWT secret for the client')
+param jwtSecret string
+
+@secure()
+@description('JWT refresh secret for the client')
+param jwtRefreshSecret string
+
 
 // ========== Reusable names ==========
 // var acrLoginServer = '${acrName}.azurecr.io'
@@ -114,6 +122,8 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
         }
         { name: 'creds-key', value: credsKey }
         { name: 'creds-iv', value: credsIv  }
+        { name: 'jwt-secret', value: jwtSecret }
+        { name: 'jwt-refresh-secret', value: jwtRefreshSecret }
       ]
     }
 
@@ -128,6 +138,8 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
             { name: 'ENCRYPTION_KEY', secretRef: 'encryption-key' }
             { name: 'CREDS_KEY',      secretRef: 'creds-key' }
             { name: 'CREDS_IV',       secretRef: 'creds-iv'  }
+            { name: 'JWT_SECRET',         secretRef: 'jwt-secret' }
+            { name: 'JWT_REFRESH_SECRET', secretRef: 'jwt-refresh-secret' }
           ]
         }
       ]
