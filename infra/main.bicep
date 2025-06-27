@@ -25,12 +25,12 @@ param openaiApiKey string
 
 
 // ========== Reusable names ==========
-var acrLoginServer = '${acrName}.azurecr.io'
+// var acrLoginServer = '${acrName}.azurecr.io'
 var logAnalyticsName = 'law-librechat'
 var acaEnvName       = 'env-librechat'
 var acaAppName       = 'libreclient'
 var acrPullRoleId    = '7f951dda-4ed3-4680-a7ca-43fe172d538d'
-
+var acrLoginServer = 'kaleidoscopeaieducation-ajfgb4ceepedbyc5.azurecr.io'
 
 resource acr 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' existing = {
   name: acrName                                                                        
@@ -65,7 +65,7 @@ resource env 'Microsoft.App/managedEnvironments@2025-01-01' = {
 
 // ========== LibreChat Container App ==========
 resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
-  name: acaAppName
+  name: 'libreclient'
   location: location
   identity: {
     type: 'SystemAssigned'
