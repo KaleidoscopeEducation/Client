@@ -31,6 +31,7 @@ var acaEnvName       = 'env-librechat'
 var acaAppName       = 'libreclient'
 var acrPullRoleId    = '7f951dda-4ed3-4680-a7ca-43fe172d538d'
 var acrLoginServer = 'kaleidoscopeaieducation-ajfgb4ceepedbyc5.azurecr.io'
+var shortAcrName = 'kaleidoscopeaieducation'
 
 resource acr 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' existing = {
   name: acrName                                                                        
@@ -100,7 +101,7 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
       containers: [
         {
           name:  'web'
-          image: '${imageRepo}:${imageTag}'
+          image: '${shortAcrName}:${imageTag}'
           env: [
             { name: 'MONGO_URI',      secretRef: 'mongo-uri'      }
             { name: 'OPENAI_API_KEY', secretRef: 'openai-api-key' }
