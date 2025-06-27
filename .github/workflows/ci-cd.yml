@@ -56,7 +56,9 @@ jobs:
           "imageTag":     { "value": "${{ github.sha }}" },
           "mongoUri":     { "value": "${{ secrets.MONGO_URI }}" },
           "openaiApiKey": { "value": "${{ secrets.OPENAI_API_KEY }}" },
-          "encryptionKey": { "value": "${{ secrets.ENCRYPTION_KEY }}" }
+          "encryptionKey": { "value": "${{ secrets.ENCRYPTION_KEY }}" },
+          "credsKey":      { "value": "${{ secrets.CREDS_KEY }}" },
+          "credsIv":       { "value": "${{ secrets.CREDS_IV }}" }
         }
         EOF
         cat deploy-params.json 

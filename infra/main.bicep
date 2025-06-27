@@ -29,6 +29,15 @@ param openaiApiKey string
 param encryptionKey string
 
 
+@secure()
+@description('Credentials key for the client')
+param credsKey string
+
+@secure()
+@description('Credentials IV for the client')
+param credsIv string
+
+
 // ========== Reusable names ==========
 // var acrLoginServer = '${acrName}.azurecr.io'
 var logAnalyticsName = 'law-librechat'
@@ -103,6 +112,8 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
           name: 'encryption-key'
           value: encryptionKey
         }
+        { name: 'creds-key', value: credsKey }
+        { name: 'creds-iv', value: credsIv  }
       ]
     }
 
@@ -115,6 +126,8 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
             { name: 'MONGO_URI',      secretRef: 'mongo-uri'      }
             { name: 'OPENAI_API_KEY', secretRef: 'openai-api-key' }
             { name: 'ENCRYPTION_KEY', secretRef: 'encryption-key' }
+            { name: 'CREDS_KEY',      secretRef: 'creds-key' }
+            { name: 'CREDS_IV',       secretRef: 'creds-iv'  }
           ]
         }
       ]
