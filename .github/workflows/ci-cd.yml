@@ -29,6 +29,12 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       # 2. ACR login (token comes from az CLI session)
+
+      - name: Downgrade Azure CLI (work-around for #31581)
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install --yes azure-cli=2.72.0-1~$(lsb_release -cs)
+          az --version   # confirm
       - name: ACR login
         run: az acr login --name $ACR_NAME
 
