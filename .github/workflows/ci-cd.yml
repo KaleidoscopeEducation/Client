@@ -55,7 +55,7 @@ jobs:
           "imageRepo":    { "value": "$ACR_LOGIN/$APP_IMAGE" },
           "imageTag":     { "value": "${{ github.sha }}" },
           "mongoUri":     { "value": "${{ secrets.MONGO_URI }}" },
-          "openaiApiKey": { "value": "${{ secrets.OPENAI_API_KEY }}" }
+          "openaiApiKey": { "value": "${{ secrets.OPENAI_API_KEY }}" },
           "encryptionKey": { "value": "${{ secrets.ENCRYPTION_KEY }}" }
         }
         EOF
