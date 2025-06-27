@@ -152,6 +152,7 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
             { name: 'JWT_REFRESH_SECRET', secretRef: 'jwt-refresh-secret' }
             { name: 'EMAIL_USERNAME',   secretRef: 'smtp-user' }
             { name: 'EMAIL_PASSWORD',   secretRef: 'smtp-pass' }
+            { name: 'MIGRATE_ROLES', value: 'true' }
           ]
         }
       ]
