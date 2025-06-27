@@ -101,7 +101,7 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
       containers: [
         {
           name:  'web'
-          image: '${shortAcrName}:${imageTag}'
+          image: '${acrLoginServer}:${imageTag}'
           env: [
             { name: 'MONGO_URI',      secretRef: 'mongo-uri'      }
             { name: 'OPENAI_API_KEY', secretRef: 'openai-api-key' }
