@@ -16,7 +16,7 @@ RUN uv --version
 
 RUN mkdir -p /app && chown node:node /app
 WORKDIR /app
-COPY .env /app/.env
+COPY .env.prod /app/.env
 
 USER node
 
