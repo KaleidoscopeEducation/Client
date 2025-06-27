@@ -32,7 +32,7 @@ var acaAppName       = 'libreclient'
 
 
 // ========== Log Analytics ==========
-resource logWs 'Microsoft.OperationalInsights/workspaces@2023-04-01' = {
+resource logWs 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
   name:  logAnalyticsName
   location: location
   sku: {
