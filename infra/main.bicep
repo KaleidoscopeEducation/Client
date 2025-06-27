@@ -81,11 +81,11 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
       ]
       secrets: [
         {
-          name:  'MONGO_URI'
+          name:  'mongo-uri'
           value: mongoUri
         }
         {
-          name:  'OPENAI_API_KEY'
+          name:  'openai-api-key'
           value: openaiApiKey
         }
       ]
@@ -97,8 +97,8 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
           name:  'web'
           image: '${imageRepo}:${imageTag}'
           env: [
-            { name: 'MONGO_URI',      secretRef: 'MONGO_URI'      }
-            { name: 'OPENAI_API_KEY', secretRef: 'OPENAI_API_KEY' }
+            { name: 'MONGO_URI',      secretRef: 'mongo-uri'      }
+            { name: 'OPENAI_API_KEY', secretRef: 'openai-api-key' }
           ]
         }
       ]
