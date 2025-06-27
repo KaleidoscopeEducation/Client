@@ -59,6 +59,7 @@ jobs:
           "encryptionKey": { "value": "${{ secrets.ENCRYPTION_KEY }}" }
         }
         EOF
+        cat deploy-params.json 
 
     # 6️⃣  Deploy Bicep
     - name: Deploy to ACA
