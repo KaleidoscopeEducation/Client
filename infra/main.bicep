@@ -163,6 +163,7 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
             { name: 'ALLOW_UNVERIFIED_EMAIL_LOGIN', value: 'true' }
             { name: 'EMAIL_ENCRYPTION', value: 'starttls'}
             { name: 'EMAIL_FROM_NAME', value: 'Kaleidoscope'}
+            { name: 'EMAIL_ALLOW_SELFSIGNED', value: '1' }
             { name: 'EMAIL_FROM', value: 'DoNotReply@f90b75ff-585a-4c44-9a3d-6ec510f94137.azurecomm.net'}
             { name: 'APP_NAME', value: 'Kaleidoscope' }
             {name: 'DOMAIN_CLIENT', value: 'https://libreclient.bluedune-a4438afc.eastus.azurecontainerapps.io'}
