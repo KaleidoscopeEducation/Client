@@ -161,10 +161,9 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
             { name: 'ALLOW_SOCIAL_REGISTRATION', value: 'false' }
             { name: 'ALLOW_PASSWORD_RESET', value: 'true' }
             { name: 'ALLOW_UNVERIFIED_EMAIL_LOGIN', value: 'true' }
-            { name: 'EMAIL_SERVICE', value: 'smtp' }
-            { name: 'EMAIL_ENCRYPTION', value: 'tls'}
+            { name: 'EMAIL_ENCRYPTION', value: 'starttls'}
             { name: 'EMAIL_FROM_NAME', value: 'Kaleidoscope'}
-            { name: 'EMAIL_FROM', value: 'Kaleidoscope@f90b75ff-585a-4c44-9a3d-6ec510f94137.azurecomm.net'}
+            { name: 'EMAIL_FROM', value: 'DoNotReply@f90b75ff-585a-4c44-9a3d-6ec510f94137.azurecomm.net'}
           ]
         }
       ]

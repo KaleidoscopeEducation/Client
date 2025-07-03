@@ -57,6 +57,8 @@ const connect = require('./connect');
     silentExit(0);
   }
 
+  console.log('Sending invitation email to:', email);
+  console.log('Invite link:', inviteLink);
   try {
     await sendEmail({
       email: email,

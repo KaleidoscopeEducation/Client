@@ -1,5 +1,13 @@
 ## README
 
+# Start in development mode:
+- run `docker-compose up` in the root folder
+- open http://localhost:3090 in your browser
+- stop the LibreChat server in your docker for desktop app
+- run npm ci in root folder
+- run npm run frontend:dev in the root folder
+- run npm run backend:dev in the root folder
+
 
 # To Create new users from their email address:
 - go to the scripts folder
@@ -11,10 +19,19 @@ https://libreclient.bluedune-a4438afc.eastus.azurecontainerapps.io/c/new
 
 
 # Create a new user:
-- login to azure.portal.com as admin
-- open console
-- run commands:
+
+- Log into azure.portal.com as the admin
+- open a command prompt inside the portal, then do the following commands:
+
 ```bash
-az containerapp revision copy --name libreclient --resource-group libreclient-rg --cpu
-az containerapp revision copy --name libreclient --resource-group libreclient-rg --cpu 0.5 --memory 1.0Gi
+  az containerapp exec \
+  --resource-group main-container-repo \
+  --name libreclient \
+  --command "/bin/sh"
+```
+
+# After waiting... THEN:
+
+```bash
+    npm run invite-user XXXX@gmail.com
 ```
