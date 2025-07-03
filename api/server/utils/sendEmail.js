@@ -25,6 +25,9 @@ const sendEmailViaMailgun = async ({ to, from, subject, html }) => {
   const mailgunDomain = process.env.MAILGUN_DOMAIN;
   const mailgunHost = process.env.MAILGUN_HOST || 'https://api.mailgun.net';
 
+  console.log('MAIL HOST:', process.env.EMAIL_HOST);
+  console.log('MAIL PORT:', process.env.EMAIL_PORT);
+
   if (!mailgunApiKey || !mailgunDomain) {
     throw new Error('Mailgun API key and domain are required');
   }
