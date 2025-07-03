@@ -35,3 +35,11 @@ https://libreclient.bluedune-a4438afc.eastus.azurecontainerapps.io/c/new
 ```bash
     npm run invite-user XXXX@gmail.com
 ```
+
+# Disable a user:
+
+- Log into azure.portal.com as the admin
+- go search for 'mongo-libre' to find the database
+- open the database and go to Data Explorer in the left menu
+- go to : test > users > (search for user) > click the item > add 'disabled' field with value 'true'
+
