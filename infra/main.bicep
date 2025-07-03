@@ -154,7 +154,7 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
             { name: 'EMAIL_PASSWORD',   secretRef: 'smtp-pass' }
             { name: 'MIGRATE_ROLES', value: 'true' }
             { name: 'ALLOW_EMAIL_LOGIN', value: 'true' }
-            { name: 'ALLOW_REGISTRATION', value: 'false' }
+            { name: 'ALLOW_REGISTRATION', value: 'true' }
             { name: 'SESSION_EXPIRY', value: '1000 * 60 * 15' }
             { name: 'EMAIL_HOST', value: 'smtp.azurecomm.net' }
             { name: 'EMAIL_PORT', value: '587' }
