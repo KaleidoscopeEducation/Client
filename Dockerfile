@@ -16,7 +16,7 @@ RUN uv --version
 
 RUN mkdir -p /app && chown node:node /app
 WORKDIR /app
-COPY .env.prod /app/.env
+COPY .env.prod /app/.env.prod
 COPY librechat.yaml /app/librechat.yaml
 
 USER node

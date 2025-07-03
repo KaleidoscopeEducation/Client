@@ -153,6 +153,18 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
             { name: 'EMAIL_USERNAME',   secretRef: 'smtp-user' }
             { name: 'EMAIL_PASSWORD',   secretRef: 'smtp-pass' }
             { name: 'MIGRATE_ROLES', value: 'true' }
+            { name: 'ALLOW_EMAIL_LOGIN', value: 'true' }
+            { name: 'ALLOW_REGISTRATION', value: 'false' }
+            { name: 'SESSION_EXPIRY', value: '1000 * 60 * 15' }
+            { name: 'EMAIL_HOST', value: 'smtp.azurecomm.net' }
+            { name: 'EMAIL_PORT', value: '587' }
+            { name: 'ALLOW_SOCIAL_REGISTRATION', value: 'false' }
+            { name: 'ALLOW_PASSWORD_RESET', value: 'true' }
+            { name: 'ALLOW_UNVERIFIED_EMAIL_LOGIN', value: 'true' }
+            { name: 'EMAIL_SERVICE', value: 'smtp' }
+            { name: 'EMAIL_ENCRYPTION', value: 'tls'}
+            { name: 'EMAIL_FROM_NAME', value: 'Kaleidoscope'}
+            { name: 'EMAIL_FROM', value: 'Kaleidoscope@f90b75ff-585a-4c44-9a3d-6ec510f94137.azurecomm.net'}
           ]
         }
       ]
