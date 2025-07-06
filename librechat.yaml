@@ -12,7 +12,7 @@ cache: true
 
 # Custom interface configuration
 interface:
-  customWelcome: "Welcome to LibreChat! Enjoy your experience."
+  customWelcome: "Welcome to Kaleidoscope! Enjoy your experience."
   # Privacy policy settings
   privacyPolicy:
     externalUrl: 'https://librechat.ai/privacy-policy'
@@ -23,43 +23,80 @@ interface:
     externalUrl: 'https://librechat.ai/tos'
     openNewTab: true
     modalAcceptance: true
-    modalTitle: "Terms of Service for LibreChat"
+    modalTitle: "Terms of Service for Kaleidoscope"
     modalContent: |
-      # Terms and Conditions for LibreChat
+      *Effective Date: July 6, 2025*
 
-      *Effective Date: February 18, 2024*
+      Welcome to Kaleidoscope, an AI-powered platform that helps educators design and refine instructional materials and student assignments. These Terms of Service (“Terms”) govern your access to and use of Kaleidoscope’s website, web app, and related services (collectively, the “Service”). By creating an account or using the Service in any manner, you agree to be bound by these Terms and by our Privacy Policy, accessible at https://kaleidoscope.example/privacy.
 
-      Welcome to LibreChat, the informational website for the open-source AI chat platform, available at https://librechat.ai. These Terms of Service ("Terms") govern your use of our website and the services we offer. By accessing or using the Website, you agree to be bound by these Terms and our Privacy Policy, accessible at https://librechat.ai//privacy.
+      ## 1. Ownership & License
 
-      ## 1. Ownership
+      When you purchase a subscription or otherwise gain authorized access to Kaleidoscope, we grant you a limited, non-exclusive, non-transferable, and revocable license to use the Service for your own educational purposes. Except for this license, Kaleidoscope and its licensors retain all right, title, and interest in the Service, including underlying code, models, and content. You may **not** resell, sublicense, or redistribute any part of the Service (or its code or model weights) without our prior written consent.
 
-      Upon purchasing a package from LibreChat, you are granted the right to download and use the code for accessing an admin panel for LibreChat. While you own the downloaded code, you are expressly prohibited from reselling, redistributing, or otherwise transferring the code to third parties without explicit permission from LibreChat.
+      ## 2. User-Generated Content
 
-      ## 2. User Data
+      **a. Your Materials.** You retain ownership of lesson plans, prompts, rubrics, and other original materials (“User Content”) that you upload or create on the Service.  
+      **b. License to Us.** You grant Kaleidoscope a worldwide, royalty-free license to host, store, process, and display your User Content solely to operate, improve, and support the Service.  
+      **c. Responsibility.** You are responsible for ensuring that your User Content complies with all applicable laws, including copyright, privacy, and student-data protections (e.g., FERPA, GDPR, COPPA where applicable).
 
-      We collect personal data, such as your name, email address, and payment information, as described in our Privacy Policy. This information is collected to provide and improve our services, process transactions, and communicate with you.
+      ## 3. Personal Data
 
-      ## 3. Non-Personal Data Collection
+      We collect personal information—such as your name, institution, email address, and payment details—as described in our Privacy Policy. We use this information to provide the Service, process payments, respond to inquiries, and enhance platform functionality.
 
-      The Website uses cookies to enhance user experience, analyze site usage, and facilitate certain functionalities. By using the Website, you consent to the use of cookies in accordance with our Privacy Policy.
+      ## 4. Educational & Student Data
 
-      ## 4. Use of the Website
+      If you submit or generate any personally identifiable information about students, you represent that you have the necessary consent or authority to do so. Kaleidoscope acts as a data processor with respect to such information and will handle it in accordance with applicable data-protection laws and our Privacy Policy.
 
-      You agree to use the Website only for lawful purposes and in a manner that does not infringe the rights of, restrict, or inhibit anyone else's use and enjoyment of the Website. Prohibited behavior includes harassing or causing distress or inconvenience to any person, transmitting obscene or offensive content, or disrupting the normal flow of dialogue within the Website.
+      ## 5. Non-Personal Data & Cookies
 
-      ## 5. Governing Law
+      We use cookies, device identifiers, and similar technologies to analyze usage, remember preferences, and improve performance. By using the Service, you consent to our use of these technologies as outlined in the Privacy Policy.
 
-      These Terms shall be governed by and construed in accordance with the laws of the United States, without giving effect to any principles of conflicts of law.
+      ## 6. Acceptable Use
 
-      ## 6. Changes to the Terms
+      You agree **not** to:  
+      * Violate any applicable law or regulation;  
+      * Upload or share content that is harassing, defamatory, obscene, or otherwise objectionable;  
+      * Attempt to reverse-engineer, probe, or disrupt our systems or security measures;  
+      * Use the Service to generate materials that facilitate academic dishonesty or violate institutional policies;  
+      * Misrepresent your affiliation with any person or entity.  
 
-      We reserve the right to modify these Terms at any time. We will notify users of any changes by email. Your continued use of the Website after such changes have been notified will constitute your consent to such changes.
+      We reserve the right to suspend or terminate accounts that violate these Terms.
 
-      ## 7. Contact Information
+      ## 7. AI-Generated Content Disclaimer
 
-      If you have any questions about these Terms, please contact us at contact@librechat.ai.
+      Kaleidoscope uses large-language-model technology. AI-generated outputs may occasionally contain inaccuracies or bias. You are solely responsible for reviewing, editing, and verifying the suitability of any materials produced by the Service before distributing them to students or third parties.
 
-      By using the Website, you acknowledge that you have read these Terms of Service and agree to be bound by them.
+      ## 8. Payment & Renewal
+
+      Subscription fees, billing cycles, and renewal terms (including free-trial periods) are detailed at checkout. Unless you cancel before the end of a billing period, subscriptions renew automatically at the then-current rate. All fees are non-refundable except as required by law.
+
+      ## 9. Termination
+
+      You may stop using the Service at any time. We may terminate or suspend your access immediately if you breach these Terms, create risk or legal exposure for us, or as required by law. Sections that by their nature should survive termination (e.g., Ownership, Disclaimers, Limitation of Liability, Governing Law) will continue to apply.
+
+      ## 10. Disclaimers & Limitation of Liability
+
+      The Service is provided **“as is”** without warranties of any kind, express or implied. To the fullest extent permitted by law, Kaleidoscope disclaims all warranties, including implied warranties of merchantability, fitness for a particular purpose, and non-infringement.  
+      To the extent permitted by law, Kaleidoscope’s total liability for any claims under these Terms is limited to the amount you paid us in the 12 months preceding the claim. We are not liable for indirect, special, incidental, consequential, or punitive damages.
+
+      ## 11. Governing Law
+
+      These Terms are governed by and construed in accordance with the laws of the State of Delaware, USA, without regard to its conflict-of-law provisions. If you are located outside the United States, you are responsible for compliance with local laws.
+
+      ## 12. Changes to the Terms
+
+      We may update these Terms from time to time. Material changes will be announced via email or prominent notice in the app at least 14 days before they take effect. Your continued use of the Service after the effective date of an update constitutes acceptance of the revised Terms.
+
+      ## 13. Contact Information
+
+      If you have any questions about these Terms, please contact us at support@kaleidoscope.example or write to:  
+      > Kaleidoscope  
+      > 123 Learning Lane  
+      > Wilmington, DE 19801  
+      > United States
+
+      By using the Service, you acknowledge that you have read these Terms of Service and agree to be bound by them.
+
 
   endpointsMenu: false
   modelSelect: false

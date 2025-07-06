@@ -21,6 +21,10 @@ param imageTag string
 param mongoUri string
 
 @secure()
+@description('API key for the assistants API')
+param assistantsApiKey string
+
+@secure()
 @description('OpenAI API key (or Azure OpenAI key)')
 param openaiApiKey string
 
@@ -124,6 +128,7 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
           name:  'openai-api-key'
           value: openaiApiKey
         }
+        {name: 'assistants-api-key', value: assistantsApiKey }
         {
           name: 'encryption-key'
           value: encryptionKey
@@ -145,6 +150,7 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
           env: [
             { name: 'MONGO_URI',      secretRef: 'mongo-uri'      }
             { name: 'OPENAI_API_KEY', secretRef: 'openai-api-key' }
+            { name: 'ASSISTANTS_API_KEY', secretRef: 'assistants-api-key'}
             { name: 'ENCRYPTION_KEY', secretRef: 'encryption-key' }
             { name: 'CREDS_KEY',      secretRef: 'creds-key' }
             { name: 'CREDS_IV',       secretRef: 'creds-iv'  }
@@ -154,7 +160,7 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
             { name: 'EMAIL_PASSWORD',   secretRef: 'smtp-pass' }
             { name: 'MIGRATE_ROLES', value: 'true' }
             { name: 'ALLOW_EMAIL_LOGIN', value: 'true' }
-            { name: 'ALLOW_REGISTRATION', value: 'true' }
+            { name: 'ALLOW_REGISTRATION', value: 'false' }
             { name: 'SESSION_EXPIRY', value: '1000 * 60 * 15' }
             { name: 'EMAIL_HOST', value: 'smtp.azurecomm.net' }
             { name: 'EMAIL_PORT', value: '587' }

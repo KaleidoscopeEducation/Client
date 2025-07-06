@@ -33,6 +33,9 @@ import EditBadges from './EditBadges';
 import BadgeRow from './BadgeRow';
 import Mention from './Mention';
 import store from '~/store';
+import GenerateFilesButton from './GenerateFilesButton';
+import EnterStudentDetails from './EnterStudentDetails';
+import GetStartedButton from './GetStartedButton';
 
 const ChatForm = memo(({ index = 0 }: { index?: number }) => {
   const submitButtonRef = useRef<HTMLButtonElement>(null);
@@ -206,7 +209,7 @@ const ChatForm = memo(({ index = 0 }: { index?: number }) => {
     <form
       onSubmit={methods.handleSubmit(submitMessage)}
       className={cn(
-        'mx-auto flex w-full flex-row gap-3 transition-[max-width] duration-300 sm:px-2',
+        'mx-auto flex w-full flex-col gap-3 transition-[max-width] duration-300 sm:px-2',
         maximizeChatSpace ? 'max-w-full' : 'md:max-w-3xl xl:max-w-4xl',
         centerFormOnLanding &&
           (conversationId == null || conversationId === Constants.NEW_CONVO) &&
@@ -216,6 +219,20 @@ const ChatForm = memo(({ index = 0 }: { index?: number }) => {
           : 'sm:mb-10',
       )}
     >
+      <div className="aboveChatButtonContainer flex flex-wrap gap-2 px-4 md:flex-nowrap">
+        <GenerateFilesButton
+          className="sm:w-full md:min-w-0 md:basis-1/3"
+          conversationId={conversationId}
+        />
+        <EnterStudentDetails
+          className="sm:w-full md:min-w-0 md:basis-1/3"
+          conversationId={conversationId}
+        />
+        <GetStartedButton
+          className="sm:w-full md:min-w-0 md:basis-1/3"
+          conversationId={conversationId}
+        />
+      </div>
       <div className="relative flex h-full flex-1 items-stretch md:flex-col">
         <div className={cn('flex w-full items-center', isRTL && 'flex-row-reverse')}>
           {showPlusPopover && !isAssistantsEndpoint(endpoint) && (
