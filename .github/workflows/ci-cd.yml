@@ -62,7 +62,7 @@ jobs:
           "jwtSecret":     { "value": "${{ secrets.JWT_SECRET }}" },
           "jwtRefreshSecret":  { "value": "${{ secrets.JWT_REFRESH_SECRET }}" },
           "smtpUser":     { "value": "${{ secrets.EMAIL_USERNAME }}" },
-          "smtpPass":     { "value": "${{ secrets.EMAIL_PASSWORD }}" }
+          "smtpPass":     { "value": "${{ secrets.EMAIL_PASSWORD }}" },
           "assistantsApiKey": { "value": "${{ secrets.ASSISTANTS_API_KEY }}" }
         }
         EOF
