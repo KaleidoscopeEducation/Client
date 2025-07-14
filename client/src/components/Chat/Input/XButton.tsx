@@ -18,29 +18,12 @@ import useLocalStorage from '~/hooks/useLocalStorageAlt';
 import { useVerifyAgentToolAuth } from '~/data-provider';
 import { ephemeralAgentByConvoId } from '~/store';
 import { Button } from '~/components/ui';
-import { MessageCircleQuestion } from 'lucide-react';
+import { X } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import type { TMessage, TStartupConfig } from 'librechat-data-provider';
 import { modeState, Mode } from '~/store/mode';
 import { useNavigate } from 'react-router-dom';
 import store from '~/store';
-
-
-
-
-const storageCondition = (value: unknown, rawCurrentValue?: string | null) => {
-  if (rawCurrentValue) {
-    try {
-      const currentValue = rawCurrentValue?.trim() ?? '';
-      if (currentValue === 'true' && value === false) {
-        return true;
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }
-  return value !== undefined && value !== null && value !== '' && value !== false;
-};
 
 const label = 'Help Me Get Started';
 const description = 'A space for you to process your thoughts';
@@ -50,19 +33,11 @@ function GetStartedButton({
   className,
   mode,
   index = 0,
-  descriptionClassName,
-  buttonClassName,
 }: {
   conversationId?: string | null;
   className?: string;
   mode: Mode;
   index?: number;
-  props?: {
-    label?: string;
-    description?: string;
-    descriptionClassName?: string;
-    buttonClassName?: string;
-  };
 }) {
   const setMode = useSetRecoilState(modeState);
   const queryClient = useQueryClient();
@@ -72,7 +47,7 @@ function GetStartedButton({
 
   const handleChange = () => {
     // console.log('Generate Files Modal Opened');
-    setMode(mode);
+    setMode(null);
 
     queryClient.setQueryData<TMessage[]>(
       [QueryKeys.messages, conversation?.conversationId ?? Constants.NEW_CONVO],
@@ -89,21 +64,11 @@ function GetStartedButton({
         variant="secondary"
         onClick={handleChange}
         aria-label={`${label} - ${description}`}
-        className={`flex w-full items-center justify-start gap-3 rounded-lg py-3 pl-[30%] pr-[30%] text-left hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring ${className ?? ''} ${buttonClassName || ''}`}
+        className={`flex w-full items-center justify-start gap-3 rounded-lg py-3 text-left hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring ${className ?? ''}`}
       >
         <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center">
-          <MessageCircleQuestion
-            className="h-5 w-5"
-            color="#599bf8"
-            size={3}
-          ></MessageCircleQuestion>
+          <X className="h-5 w-5" color="#599bf8" size={3}></X>
         </span>
-        <div className="ml-4 flex flex-col leading-snug">
-          <span className="text-sm font-medium">{label}</span>
-          <span className={`text-xs text-muted-foreground ${descriptionClassName || ''}`}>
-            {description}
-          </span>
-        </div>
       </Button>
     </>
   );

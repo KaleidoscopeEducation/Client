@@ -36,3 +36,4 @@ export { default as useSpeechToText } from './Input/useSpeechToText';
 export { default as useTextToSpeech } from './Input/useTextToSpeech';
 export { default as useGenerationsByLatest } from './useGenerationsByLatest';
 export { default as useGenFilesForm } from './Plugins/useGenFilesForm';
+export { default as useStudentHelpForm } from './Plugins/useStudentHelpForm';

@@ -18,6 +18,7 @@ import Landing from './Landing';
 import Header from './Header';
 import Footer from './Footer';
 import store from '~/store';
+import { modeState } from '~/store/mode';
 
 function LoadingSpinner() {
   return (
@@ -34,7 +35,7 @@ function ChatView({ index = 0 }: { index?: number }) {
   const rootSubmission = useRecoilValue(store.submissionByIndex(index));
   const addedSubmission = useRecoilValue(store.submissionByIndex(index + 1));
   const centerFormOnLanding = useRecoilValue(store.centerFormOnLanding);
-
+  const mode = useRecoilValue(modeState);
   const fileMap = useFileMapContext();
 
   const { data: messagesTree = null, isLoading } = useGetMessagesByConvoId(conversationId ?? '', {
@@ -97,7 +98,7 @@ function ChatView({ index = 0 }: { index?: number }) {
                       isLandingPage && 'max-w-3xl transition-all duration-200 xl:max-w-4xl',
                     )}
                   >
-                    <ChatForm index={index} />
+                    <ChatForm index={index} mode={mode} />
                     {isLandingPage ? <ConversationStarters /> : <Footer />}
                   </div>
                 </div>

@@ -7,6 +7,9 @@ import { BirthdayIcon, TooltipAnchor, SplitText } from '~/components';
 import ConvoIcon from '~/components/Endpoints/ConvoIcon';
 import { useLocalize, useAuthContext } from '~/hooks';
 import { getIconEndpoint, getEntity } from '~/utils';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { modeState } from '~/store/mode';
+
 
 const containerClassName =
   'shadow-stroke relative flex h-full items-center justify-center rounded-full bg-white dark:bg-presentation dark:text-white text-black dark:after:shadow-none ';
@@ -35,6 +38,7 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
   const { data: endpointsConfig } = useGetEndpointsQuery();
   const { user } = useAuthContext();
   const localize = useLocalize();
+  const mode = useRecoilValue(modeState);
 
   const [textHasMultipleLines, setTextHasMultipleLines] = useState(false);
   const [lineCount, setLineCount] = useState(1);
@@ -138,10 +142,34 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
     return margin;
   }, [lineCount, description, textHasMultipleLines, contentHeight]);
 
-  const greetingText =
+
+
+  //Original greeting text code
+  // const greetingText =
+  //   typeof startupConfig?.interface?.customWelcome === 'string'
+  //     ? getGreeting()
+  //     : getGreeting() + (user?.name ? ', ' + user.name : '');
+
+  let greetingText: string;
+
+  const mainGreeting =
     typeof startupConfig?.interface?.customWelcome === 'string'
       ? getGreeting()
       : getGreeting() + (user?.name ? ', ' + user.name : '');
+  const classroomGreeting = 'Lets get started lesson planning!';
+  const startGreeting = 'Ask me anything to get the process going 😃';
+  const studentGreeting = 'Lets customize your teaching tools! 🧑‍🎓';
+
+  if (mode === 'student') {
+    //set greetingText to a default value for student mode
+    greetingText = studentGreeting;
+  } else if (mode === 'classroom') {
+    greetingText = classroomGreeting;
+  } else if (mode === 'start') {
+    greetingText = startGreeting;
+  } else {
+    greetingText = mainGreeting;
+  }
 
   return (
     <div

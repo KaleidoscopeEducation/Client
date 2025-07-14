@@ -2,11 +2,11 @@
 
 # Start in development mode:
 - run `docker-compose up` in the root folder
-- open http://localhost:3090 in your browser
 - stop the LibreChat server in your docker for desktop app
+- open http://localhost:3090 in your browser
 - run npm ci in root folder
-- run npm run frontend:dev in the root folder
 - run npm run backend:dev in the root folder
+- run npm run frontend:dev in the root folder
 
 
 # To Create new users from their email address:
