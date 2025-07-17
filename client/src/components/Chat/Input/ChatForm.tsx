@@ -39,6 +39,9 @@ import GetStartedButton from './GetStartedButton';
 import XButton from './XButton';
 import { ModeButton } from './ModeButton';
 import { modeState } from '~/store/mode';
+import { useGetStartupConfig } from '~/data-provider';
+import FileGenButton from './FileGenButton';
+import { ModelSelectorProvider } from '../Menus/Endpoints/ModelSelectorContext';
 
 const ChatForm = memo(({ index = 0 }: { index?: number }) => {
   const submitButtonRef = useRef<HTMLButtonElement>(null);
@@ -67,6 +70,7 @@ const ChatForm = memo(({ index = 0 }: { index?: number }) => {
   const [showMentionPopover, setShowMentionPopover] = useRecoilState(
     store.showMentionPopoverFamily(index),
   );
+  const { data: startupConfig } = useGetStartupConfig();
 
   const { requiresKey } = useRequiresKey();
   const methods = useChatFormContext();
@@ -237,6 +241,7 @@ const ChatForm = memo(({ index = 0 }: { index?: number }) => {
               key={mode}
               Component={Component}
               mode={mode}
+              startupConfig={startupConfig}
               props={{ conversationId, className: 'sm:w-full md:min-w-full h-20' }}
             />
           ))}
@@ -262,6 +267,7 @@ const ChatForm = memo(({ index = 0 }: { index?: number }) => {
                 key={mode}
                 Component={Component}
                 mode={mode}
+                startupConfig={startupConfig}
                 props={{
                   conversationId,
                   className: 'sm:basis-1/3 md:basis-1/3 basis-1/3 pl-[5%] pr-[5%]',
@@ -369,6 +375,13 @@ const ChatForm = memo(({ index = 0 }: { index?: number }) => {
                       mode={mode}
                     />
                   </div>
+                  {mode === 'student' && (
+                    <div className={`${isRTL ? 'mr-2' : 'ml-2'}`}>
+                      <ModelSelectorProvider startupConfig={startupConfig}>
+                        <FileGenButton />
+                      </ModelSelectorProvider>
+                    </div>
+                  )}
                   <BadgeRow
                     showEphemeralBadges={!isAgentsEndpoint(endpoint) && !isAssistantsEndpoint(endpoint)}
                     conversationId={conversationId}

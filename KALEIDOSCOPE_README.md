@@ -43,3 +43,9 @@ https://libreclient.bluedune-a4438afc.eastus.azurecontainerapps.io/c/new
 - open the database and go to Data Explorer in the left menu
 - go to : test > users > (search for user) > click the item > add 'disabled' field with value 'true'
 
+#Theme Colors:
+- Orange: #c28770
+- Green: #72b147
+- Blue: #007BFF
+- Aqua Green: #215156
+- Yellow: #ebb951

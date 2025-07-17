@@ -8,13 +8,11 @@ import type { TMessage, TStartupConfig } from 'librechat-data-provider';
 import { QueryKeys, Constants } from 'librechat-data-provider';
 import { useNavigate } from 'react-router-dom';
 
-
-
 export interface StudentHelpFormData {
   assistant: string;
   assignmentCount: number;
   notes: string;
-  index?: number;
+  index?: string;
 }
 
 export default function useStudentHelpForm({
@@ -39,7 +37,6 @@ export default function useStudentHelpForm({
       setMode(mode);
       /* 1️⃣ – Ctrl/Cmd‑click opens a blank chat in a new tab */
       // window.open('/c/new', '_blank');
-     
       /* 2️⃣ – wipe the message cache for the current conversation */
       queryClient.setQueryData<TMessage[]>(
         [QueryKeys.messages, conversation?.conversationId ?? Constants.NEW_CONVO],

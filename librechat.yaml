@@ -194,20 +194,20 @@ interface:
 #       - /path/to/obsidian/vault
 
 # Definition of custom endpoints
-# endpoints:
-#   # assistants:
-#   #   disableBuilder: false # Disable Assistants Builder Interface by setting to `true`
-#   #   pollIntervalMs: 3000  # Polling interval for checking assistant updates
-#   #   timeoutMs: 180000  # Timeout for assistant operations
+endpoints:
+  assistants:
+    disableBuilder: false # Disable Assistants Builder Interface by setting to `true`
+    pollIntervalMs: 3000  # Polling interval for checking assistant updates
+    timeoutMs: 180000  # Timeout for assistant operations
 #   #   # Should only be one or the other, either `supportedIds` or `excludedIds`
-#   #   supportedIds: ["asst_supportedAssistantId1", "asst_supportedAssistantId2"]
-#   #   # excludedIds: ["asst_excludedAssistantId"]
+    supportedIds: ["asst_MbxQpSNgSc0QG4MFRhfPTU6Z", "asst_nMVHhlYGOylY81IAJuI17a4j"]
+    # excludedIds: ["asst_KUAWXPcoPX56VvNnytlc0XsH"]
 #   #   # Only show assistants that the user created or that were created externally (e.g. in Assistants playground).
 #   #   # privateAssistants: false # Does not work with `supportedIds` or `excludedIds`
 #   #   # (optional) Models that support retrieval, will default to latest known OpenAI models that support the feature
-#   #   retrievalModels: ["gpt-4-turbo-preview"]
+    retrievalModels: ["gpt-4-o"]
 #   #   # (optional) Assistant Capabilities available to all users. Omit the ones you wish to exclude. Defaults to list below.
-#   #   capabilities: ["code_interpreter", "retrieval", "actions", "tools", "image_vision"]
+    capabilities: [ "tools"]
 #   # agents:
 #   #   # (optional) Default recursion depth for agents, defaults to 25
 #   #   recursionLimit: 50
@@ -336,3 +336,48 @@ interface:
 # #     px: 1024
 # # # See the Custom Configuration Guide for more information on Assistants Config:
 # # # https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/assistants_endpoint
+modelSpecs:
+  enforce: true
+  list:
+    - name: "gardening-assistant"
+      label: "Gardening Assistant"
+      preset:
+        endpoint: "assistants"
+        assistant_id: "asst_MbxQpSNgSc0QG4MFRhfPTU6Z"
+        model: "gpt-4o"
+    - name: "music-assistant"
+      label: "Music Assistant"
+      preset:
+        endpoint: "assistants"
+        assistant_id: "asst_nMVHhlYGOylY81IAJuI17a4j"
+        model: "gpt-4o"
+    - name: "art-assistant"
+      label: "Art Assistant"
+      preset:
+        endpoint: "assistants"
+        assistant_id: "asst_Qz7DWMoUtp9cKAR7HRQ3fTYZ"
+        model: "gpt-4o"
+    - name: "yoga-assistant"
+      label: "Yoga Assistant"
+      preset:
+        endpoint: "assistants"
+        assistant_id: "asst_W4338pmKtKG5opAjNEK7iAFA"
+        model: "gpt-4o"
+    - name: "creative-writing-assistant"
+      label: "Creative Writing Assistant"
+      preset:
+        endpoint: "assistants"
+        assistant_id: "asst_PSrtphPk13nA0f2YjeH5PEth"
+        model: "gpt-4o"
+    - name: "data-gathering-assistant"
+      label: "Data Assistant"
+      default: true
+      preset:
+        endpoint: "assistants"
+        assistant_id: "asst_CIZHPxU8AG3FEJzgsG4en5BB"
+        model: "gpt-4o"
+    - name: "gpt4o-chat"
+      label: "GPT-4o (no memory)"
+      preset:
+        endpoint: "openAI"
+        model: "gpt-4o"

@@ -28,7 +28,7 @@ import store from '~/store';
 const label = 'Help Me Get Started';
 const description = 'A space for you to process your thoughts';
 
-function GetStartedButton({
+function XButton({
   conversationId,
   className,
   mode,
@@ -46,7 +46,6 @@ function GetStartedButton({
   const { newConversation: newConvo } = useNewConvo(index);
 
   const handleChange = () => {
-    // console.log('Generate Files Modal Opened');
     setMode(null);
 
     queryClient.setQueryData<TMessage[]>(
@@ -55,7 +54,7 @@ function GetStartedButton({
     );
     queryClient.invalidateQueries({ queryKey: [QueryKeys.messages] });
     navigate('/c/new', { state: { focusChat: true } });
-    console.log('✔️ Help Me Get Started');
+    console.log('✔️ XButton Clicked. Going back to home.');
   };
 
   return (
@@ -74,4 +73,4 @@ function GetStartedButton({
   );
 }
 
-export default memo(GetStartedButton);
+export default memo(XButton);

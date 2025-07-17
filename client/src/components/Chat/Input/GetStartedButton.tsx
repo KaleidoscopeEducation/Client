@@ -24,23 +24,21 @@ import type { TMessage, TStartupConfig } from 'librechat-data-provider';
 import { modeState, Mode } from '~/store/mode';
 import { useNavigate } from 'react-router-dom';
 import store from '~/store';
+import { useModelSelectorContext } from '../Menus/Endpoints/ModelSelectorContext';
 
-
-
-
-const storageCondition = (value: unknown, rawCurrentValue?: string | null) => {
-  if (rawCurrentValue) {
-    try {
-      const currentValue = rawCurrentValue?.trim() ?? '';
-      if (currentValue === 'true' && value === false) {
-        return true;
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }
-  return value !== undefined && value !== null && value !== '' && value !== false;
-};
+// const storageCondition = (value: unknown, rawCurrentValue?: string | null) => {
+//   if (rawCurrentValue) {
+//     try {
+//       const currentValue = rawCurrentValue?.trim() ?? '';
+//       if (currentValue === 'true' && value === false) {
+//         return true;
+//       }
+//     } catch (e) {
+//       console.error(e);
+//     }
+//   }
+//   return value !== undefined && value !== null && value !== '' && value !== false;
+// };
 
 const label = 'Help Me Get Started';
 const description = 'A space for you to process your thoughts';
@@ -65,15 +63,40 @@ function GetStartedButton({
   };
 }) {
   const setMode = useSetRecoilState(modeState);
+  const [currentMode] = useRecoilState(modeState);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { conversation } = store.useCreateConversationAtom(index);
   const { newConversation: newConvo } = useNewConvo(index);
 
-  const handleChange = () => {
-    // console.log('Generate Files Modal Opened');
-    setMode(mode);
+  const {
+    // LibreChat
+    modelSpecs,
+    mappedEndpoints,
+    endpointsConfig,
+    // State
+    searchValue,
+    searchResults,
+    selectedValues,
 
+    // Functions
+    setSearchValue,
+    setSelectedValues,
+    // Dialog
+    keyDialogOpen,
+    keyDialogEndpoint,
+    handleSelectSpec,
+  } = useModelSelectorContext();
+
+  const findSpecByName = <T extends { name: string }>(specs: T[], target: string): T | undefined =>
+    specs.find((s) => s.name === target);
+
+  const handleChange = () => {
+    const spec = findSpecByName(modelSpecs, 'data-gathering-assistant');
+    if (!spec) return;
+
+    console.log('setting mode to:', mode);
+    setMode(mode);
     queryClient.setQueryData<TMessage[]>(
       [QueryKeys.messages, conversation?.conversationId ?? Constants.NEW_CONVO],
       [],
@@ -81,12 +104,13 @@ function GetStartedButton({
     queryClient.invalidateQueries({ queryKey: [QueryKeys.messages] });
     navigate('/c/new', { state: { focusChat: true } });
     console.log('✔️ Help Me Get Started');
+    handleSelectSpec(spec);
   };
 
   return (
     <>
       <Button
-        variant="secondary"
+        variant={currentMode === 'start' ? 'outline' : 'secondary'}
         onClick={handleChange}
         aria-label={`${label} - ${description}`}
         className={`flex w-full items-center justify-start gap-3 rounded-lg py-3 pl-[30%] pr-[30%] text-left hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring ${className ?? ''} ${buttonClassName || ''}`}

@@ -3,7 +3,7 @@ import { ChevronDown } from 'lucide-react';
 import * as Menu from '@ariakit/react/menu';
 import { AuthType, SearchCategories, RerankerTypes } from 'librechat-data-provider';
 import type { UseFormRegister, UseFormHandleSubmit } from 'react-hook-form';
-import type { SearchApiKeyFormData } from '~/hooks/Plugins/useAuthSearchTool';
+// import type { SearchApiKeyFormData } from '~/hooks/Plugins/useAuthSearchTool';
 import type { MenuItemProps } from '~/common';
 import { Input, Button, OGDialog, Label } from '~/components/ui';
 import OGDialogTemplate from '~/components/ui/OGDialogTemplate';
@@ -12,65 +12,120 @@ import { useGetStartupConfig } from '~/data-provider';
 import { useLocalize } from '~/hooks';
 import { set } from 'lodash';
 import { Textarea } from '~/components/ui/Textarea';
+import { useModelSelectorContext } from '~/components/Chat/Menus/Endpoints/ModelSelectorContext';
+import { on } from 'events';
+import { useFormContext } from 'react-hook-form';
+import { FileGenFormData } from '~/hooks/Plugins/useGenFilesForm';
 
 export default function FileGenDialog({
   isOpen,
   onSubmit,
-  onRevoke,
   onOpenChange,
-  authTypes,
   isToolAuthenticated,
   register,
-  handleSubmit,
   triggerRef,
 }: {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (data: SearchApiKeyFormData) => void;
-  onRevoke: () => void;
-  authTypes: [string, AuthType][];
+  onSubmit: (data: FileGenFormData) => void;
   isToolAuthenticated: boolean;
-  register: UseFormRegister<SearchApiKeyFormData>;
-  handleSubmit: UseFormHandleSubmit<SearchApiKeyFormData>;
+  register: UseFormRegister<FileGenFormData>;
   triggerRef?: React.RefObject<HTMLInputElement>;
 }) {
   const localize = useLocalize();
   const { data: config } = useGetStartupConfig();
-  const [selectedReranker, setSelectedReranker] = useState<
-    RerankerTypes.JINA | RerankerTypes.COHERE
-  >(
-    config?.webSearch?.rerankerType === RerankerTypes.COHERE
-      ? RerankerTypes.COHERE
-      : RerankerTypes.JINA,
-  );
 
   const [providerDropdownOpen, setProviderDropdownOpen] = useState(false);
   // const [scraperDropdownOpen, setScraperDropdownOpen] = useState(false);
-  const [rerankerDropdownOpen, setRerankerDropdownOpen] = useState(false);
+  // const [rerankerDropdownOpen, setRerankerDropdownOpen] = useState(false);
   const [assignmentNumberDropdownOpen, setAssignmentNumberDropdownOpen] = useState(false);
+  // const { handleSelectSpec, endpointsConfig } = useModelSelectorContext();
+  const [assistant, setSelectedSubject] = useState<string | null>(null);
+  const [selectedAssignmentNumber, setSelectedAssignmentNumber] = useState<string | null>(null);
+  const { setValue } = useFormContext<FileGenFormData>();
 
-  const providerItems: MenuItemProps[] = [
-    {
-      label: localize('com_ui_web_search_provider_serper'),
-      onClick: () => {},
-    },
-  ];
+  const {
+    // LibreChat
+    modelSpecs,
+    mappedEndpoints,
+    endpointsConfig,
+    // State
+    searchValue,
+    searchResults,
+    selectedValues,
 
-  const scraperItems: MenuItemProps[] = [
-    {
-      label: localize('com_ui_web_search_scraper_firecrawl'),
-      onClick: () => {},
-    },
-  ];
+    // Functions
+    setSearchValue,
+    setSelectedValues,
+    // Dialog
+    keyDialogOpen,
+    keyDialogEndpoint,
+    handleSelectSpec,
+  } = useModelSelectorContext();
 
-  const rerankerItems: MenuItemProps[] = [
+  const findSpecByName = <T extends { name: string }>(specs: T[], target: string): T | undefined =>
+    specs.find((s) => s.name === target);
+
+  const classItems: MenuItemProps[] = [
     {
-      label: localize('com_ui_web_search_reranker_jina'),
-      onClick: () => setSelectedReranker(RerankerTypes.JINA),
+      label: 'Art',
+      id: 'art-assistant',
+      onClick: () => {
+        const spec = findSpecByName(modelSpecs, 'art-assistant');
+        if (!spec) return;
+
+        setSelectedSubject('art-assistant');
+        setValue('assistant', 'art-assistant');
+        handleSelectSpec(spec);
+      },
     },
     {
-      label: localize('com_ui_web_search_reranker_cohere'),
-      onClick: () => setSelectedReranker(RerankerTypes.COHERE),
+      label: 'Creative Writing',
+      id: 'creative-writing-assistant',
+      onClick: () => {
+        const spec = findSpecByName(modelSpecs, 'creative-writing-assistant');
+        if (!spec) return;
+
+        setSelectedSubject('creative-writing-assistant');
+        setValue('assistant', 'creative-writing-assistant');
+        handleSelectSpec(spec);
+      },
+    },
+    {
+      label: 'Gardening',
+      id: 'gardening-assistant',
+      onClick: () => {
+        const spec = findSpecByName(modelSpecs, 'gardening-assistant');
+        if (!spec) return;
+
+        setSelectedSubject('gardening-assistant');
+        setValue('assistant', 'gardening-assistant');
+        handleSelectSpec(spec);
+      },
+    },
+    {
+      label: 'Movement & Mindfulness',
+      id: 'yoga-assistant',
+      onClick: () => {
+        const spec = findSpecByName(modelSpecs, 'yoga-assistant');
+        if (!spec) return;
+
+        setSelectedSubject('yoga-assistant');
+        setValue('assistant', 'yoga-assistant');
+        handleSelectSpec(spec);
+      },
+    },
+    {
+      label: 'Music',
+      id: 'music-assistant',
+      onClick: () => {
+        const spec = findSpecByName(modelSpecs, 'music-assistant');
+        if (!spec) return;
+
+        setSelectedSubject('music-assistant');
+        setValue('assistant', 'music-assistant');
+        handleSelectSpec(spec);
+      },
     },
   ];
 
@@ -78,19 +133,15 @@ export default function FileGenDialog({
   const assignmentNumbers = Array.from({ length: 10 }, (_, i) => ({
     label: (i + 1).toString(),
     value: (i + 1).toString(),
+    onClick: () => {
+      setSelectedAssignmentNumber((i + 1).toString());
+      setValue('assignmentCount', (i + 1).toString());
+    },
   }));
 
-  const showProviderDropdown = !config?.webSearch?.searchProvider;
-  const showScraperDropdown = !config?.webSearch?.scraperType;
-  const showRerankerDropdown = !config?.webSearch?.rerankerType;
-
-  // Determine which categories are SYSTEM_DEFINED
-  const providerAuthType = authTypes.find(([cat]) => cat === SearchCategories.PROVIDERS)?.[1];
-  const scraperAuthType = authTypes.find(([cat]) => cat === SearchCategories.SCRAPERS)?.[1];
-  const rerankerAuthType = authTypes.find(([cat]) => cat === SearchCategories.RERANKERS)?.[1];
-  const title = 'Generate Assignments';
+  const title = 'Tell us a little more about your student';
   const secondLine =
-    'Select your assistant, the number of assignments, and add additional guidance.';
+    'Select the class subject, the number of assignments, and add any details or instructions you want to include.';
   const assistantTitle = 'Assistant';
   const numberOfAssignmentsTitle = 'Number of Assignments';
   const additionalGuidanceTitle = 'Additional Guidance';
@@ -104,30 +155,30 @@ export default function FileGenDialog({
           <>
             <div className="mb-4 text-center font-medium">{title}</div>
             <div className="mb-4 text-center text-sm">{secondLine}</div>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={onSubmit}>
               {/* Search Provider Section */}
-              {providerAuthType !== AuthType.SYSTEM_DEFINED && (
-                <div className="mb-6">
-                  <div className="mb-2 flex items-center justify-between">
-                    <Label className="text-md w-fit font-medium">{assistantTitle}</Label>
-                  </div>
-                  <DropdownPopup
-                    menuId="search-provider-dropdown"
-                    items={providerItems}
-                    isOpen={providerDropdownOpen}
-                    setIsOpen={setProviderDropdownOpen}
-                    trigger={
-                      <Menu.MenuButton
-                        onClick={() => setProviderDropdownOpen(!providerDropdownOpen)}
-                        className="flex items-center rounded-md border border-border-light px-3 py-1 text-sm text-text-secondary"
-                      >
-                        {'Assistant 1'}
-                        <ChevronDown className="ml-1 h-4 w-4" />
-                      </Menu.MenuButton>
-                    }
-                  />
+              {/* {providerAuthType !== AuthType.SYSTEM_DEFINED && ( */}
+              <div className="mb-6">
+                <div className="mb-2 flex items-center justify-between">
+                  <Label className="text-md w-fit font-medium">{assistantTitle}</Label>
                 </div>
-              )}
+                <DropdownPopup
+                  menuId="search-provider-dropdown"
+                  items={classItems}
+                  isOpen={providerDropdownOpen}
+                  setIsOpen={setProviderDropdownOpen}
+                  trigger={
+                    <Menu.MenuButton
+                      onClick={() => setProviderDropdownOpen(!providerDropdownOpen)}
+                      className="flex items-center rounded-md border border-border-light px-3 py-1 text-sm text-text-secondary"
+                    >
+                      {assistant || 'Select Class Subject'}
+                      <ChevronDown className="ml-1 h-4 w-4" />
+                    </Menu.MenuButton>
+                  }
+                />
+              </div>
+              {/* )} */}
               <div className="mb-6">
                 <div className="mb-2 flex items-center justify-between">
                   <Label className="text-md w-fit font-medium">{numberOfAssignmentsTitle}</Label>
@@ -137,12 +188,15 @@ export default function FileGenDialog({
                   items={assignmentNumbers}
                   isOpen={assignmentNumberDropdownOpen}
                   setIsOpen={setAssignmentNumberDropdownOpen}
+                  // onItemSelect={(item) => {
+                  //   setSelectedAssignmentNumber(item.value);
+                  // }}
                   trigger={
                     <Menu.MenuButton
                       onClick={() => setAssignmentNumberDropdownOpen(!assignmentNumberDropdownOpen)}
                       className="flex items-center rounded-md border border-border-light px-3 py-1 text-sm text-text-secondary"
                     >
-                      {'Number of Assignments'}
+                      {selectedAssignmentNumber || 'Select Number of Assignments'}
                       <ChevronDown className="ml-1 h-4 w-4" />
                     </Menu.MenuButton>
                   }
@@ -165,20 +219,20 @@ export default function FileGenDialog({
           </>
         }
         selection={{
-          selectHandler: handleSubmit(onSubmit),
+          selectHandler: onSubmit,
           selectClasses: 'bg-green-500 hover:bg-green-600 text-white',
           selectText: localize('com_ui_save'),
         }}
-        buttons={
-          isToolAuthenticated && (
-            <Button
-              onClick={onRevoke}
-              className="bg-destructive text-white transition-all duration-200 hover:bg-destructive/80"
-            >
-              {localize('com_ui_revoke')}
-            </Button>
-          )
-        }
+        // buttons={
+        //   isToolAuthenticated && (
+        //     <Button
+        //       onClick={onRevoke}
+        //       className="bg-destructive text-white transition-all duration-200 hover:bg-destructive/80"
+        //     >
+        //       {localize('com_ui_revoke')}
+        //     </Button>
+        //   )
+        // }
         showCancelButton={true}
       />
     </OGDialog>

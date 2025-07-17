@@ -10,14 +10,25 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import store from '~/store';
 import { useLocalize, useNewConvo } from '~/hooks';
+import {
+  ModelSelectorProvider,
+  useModelSelectorContext,
+} from '~/components/Chat/Menus/Endpoints/ModelSelectorContext';
+import type * as t from 'librechat-data-provider';
 
-type SharedProps = { className?: string; conversationId?: string, modeButtonClassNames?: string };
+type SharedProps = {
+  className?: string;
+  conversationId?: string;
+  modeButtonClassNames?: string;
+  startupConfig?: t.TStartupConfig | undefined;
+};
 
 interface ModeButtonProps<P> {
   Component: ComponentType<P & SharedProps>;
   mode: Mode;
   props: P & SharedProps;
   index?: number;
+  startupConfig?: TStartupConfig | undefined;
 }
 
 /** Adds `onClick` behaviour without touching the original component source */
@@ -26,6 +37,7 @@ export function ModeButton<P extends object>({
   mode,
   props,
   index = 0,
+  startupConfig = undefined,
 }: ModeButtonProps<P>) {
   const setMode = useSetRecoilState(modeState);
   const queryClient = useQueryClient();
@@ -88,14 +100,16 @@ export function ModeButton<P extends object>({
   );
 
   return (
-    <button
-      type="button"
-      className={`text-left ${props.modeButtonClassNames}`}
-      // onClick={(e) => handleClick(e)}
-      // convoCleanup={convoCleanup}
-    >
-      <Component {...props} convoCleanup={convoCleanup} mode={mode} />
-    </button>
+    <ModelSelectorProvider startupConfig={startupConfig}>
+      <button
+        type="button"
+        className={`text-left ${props.modeButtonClassNames}`}
+        // onClick={(e) => handleClick(e)}
+        // convoCleanup={convoCleanup}
+      >
+        <Component {...props} convoCleanup={convoCleanup} mode={mode} />
+      </button>
+    </ModelSelectorProvider>
   );
 }
 function navigate(arg0: string, arg1: { state: { focusChat: boolean } }) {

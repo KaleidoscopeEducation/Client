@@ -3,7 +3,7 @@ import { ChevronDown } from 'lucide-react';
 import * as Menu from '@ariakit/react/menu';
 import { AuthType, SearchCategories, RerankerTypes } from 'librechat-data-provider';
 import type { UseFormRegister, UseFormHandleSubmit } from 'react-hook-form';
-import type { SearchApiKeyFormData } from '~/hooks/Plugins/useAuthSearchTool';
+// import type { SearchApiKeyFormData } from '~/hooks/Plugins/useAuthSearchTool';
 import type { MenuItemProps } from '~/common';
 import { Input, Button, OGDialog, Label } from '~/components/ui';
 import OGDialogTemplate from '~/components/ui/OGDialogTemplate';
@@ -12,6 +12,10 @@ import { useGetStartupConfig } from '~/data-provider';
 import { useLocalize } from '~/hooks';
 import { set } from 'lodash';
 import { Textarea } from '~/components/ui/Textarea';
+import { useModelSelectorContext } from '~/components/Chat/Menus/Endpoints/ModelSelectorContext';
+import { on } from 'events';
+import { useFormContext } from 'react-hook-form';
+import { StudentHelpFormData } from '~/hooks/Plugins/useStudentHelpForm';
 
 export default function StudentHelpDialog({
   isOpen,
@@ -23,9 +27,9 @@ export default function StudentHelpDialog({
 }: {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (data: SearchApiKeyFormData) => void;
+  onSubmit: (data: StudentHelpFormData) => void;
   isToolAuthenticated: boolean;
-  register: UseFormRegister<SearchApiKeyFormData>;
+  register: UseFormRegister<StudentHelpFormData>;
   triggerRef?: React.RefObject<HTMLInputElement>;
 }) {
   const localize = useLocalize();
@@ -42,35 +46,104 @@ export default function StudentHelpDialog({
   // const [scraperDropdownOpen, setScraperDropdownOpen] = useState(false);
   // const [rerankerDropdownOpen, setRerankerDropdownOpen] = useState(false);
   const [assignmentNumberDropdownOpen, setAssignmentNumberDropdownOpen] = useState(false);
+  // const { handleSelectSpec, endpointsConfig } = useModelSelectorContext();
+  const [assistant, setSelectedSubject] = useState<string | null>(null);
+  const [selectedAssignmentNumber, setSelectedAssignmentNumber] = useState<string | null>(null);
+  const { setValue } = useFormContext<StudentHelpFormData>();
+
+  const {
+    // LibreChat
+    modelSpecs,
+    mappedEndpoints,
+    endpointsConfig,
+    // State
+    searchValue,
+    searchResults,
+    selectedValues,
+
+    // Functions
+    setSearchValue,
+    setSelectedValues,
+    // Dialog
+    keyDialogOpen,
+    keyDialogEndpoint,
+    handleSelectSpec,
+  } = useModelSelectorContext();
+
+  const findSpecByName = <T extends { name: string }>(specs: T[], target: string): T | undefined =>
+    specs.find((s) => s.name === target);
 
   const classItems: MenuItemProps[] = [
     {
       label: 'Art',
-      onClick: () => {},
+      id: 'art-assistant',
+      onClick: () => {
+        const spec = findSpecByName(modelSpecs, 'art-assistant');
+        if (!spec) return;
+
+        setSelectedSubject('art-assistant');
+        setValue('assistant', 'art-assistant');
+        handleSelectSpec(spec);
+      },
     },
     {
       label: 'Creative Writing',
-      onClick: () => {},
+      id: 'creative-writing-assistant',
+      onClick: () => {
+        const spec = findSpecByName(modelSpecs, 'creative-writing-assistant');
+        if (!spec) return;
+
+        setSelectedSubject('creative-writing-assistant');
+        setValue('assistant', 'creative-writing-assistant');
+        handleSelectSpec(spec);
+      },
     },
     {
       label: 'Gardening',
-      onClick: () => {},
+      id: 'gardening-assistant',
+      onClick: () => {
+        const spec = findSpecByName(modelSpecs, 'gardening-assistant');
+        if (!spec) return;
+
+        setSelectedSubject('gardening-assistant');
+        setValue('assistant', 'gardening-assistant');
+        handleSelectSpec(spec);
+      },
     },
     {
       label: 'Movement & Mindfulness',
-      onClick: () => {},
+      id: 'yoga-assistant',
+      onClick: () => {
+        const spec = findSpecByName(modelSpecs, 'yoga-assistant');
+        if (!spec) return;
+
+        setSelectedSubject('yoga-assistant');
+        setValue('assistant', 'yoga-assistant');
+        handleSelectSpec(spec);
+      },
     },
     {
       label: 'Music',
-      onClick: () => {},
+      id: 'music-assistant',
+      onClick: () => {
+        const spec = findSpecByName(modelSpecs, 'music-assistant');
+        if (!spec) return;
+
+        setSelectedSubject('music-assistant');
+        setValue('assistant', 'music-assistant');
+        handleSelectSpec(spec);
+      },
     },
   ];
-
 
   //numbers 1-10 for assignment selection
   const assignmentNumbers = Array.from({ length: 10 }, (_, i) => ({
     label: (i + 1).toString(),
     value: (i + 1).toString(),
+    onClick: () => {
+      setSelectedAssignmentNumber((i + 1).toString());
+      setValue('assignmentCount', (i + 1).toString());
+    },
   }));
 
   const title = 'Tell us a little more about your student';
@@ -106,7 +179,7 @@ export default function StudentHelpDialog({
                       onClick={() => setProviderDropdownOpen(!providerDropdownOpen)}
                       className="flex items-center rounded-md border border-border-light px-3 py-1 text-sm text-text-secondary"
                     >
-                      {'Class Subject'}
+                      {assistant || 'Select Class Subject'}
                       <ChevronDown className="ml-1 h-4 w-4" />
                     </Menu.MenuButton>
                   }
@@ -122,12 +195,15 @@ export default function StudentHelpDialog({
                   items={assignmentNumbers}
                   isOpen={assignmentNumberDropdownOpen}
                   setIsOpen={setAssignmentNumberDropdownOpen}
+                  // onItemSelect={(item) => {
+                  //   setSelectedAssignmentNumber(item.value);
+                  // }}
                   trigger={
                     <Menu.MenuButton
                       onClick={() => setAssignmentNumberDropdownOpen(!assignmentNumberDropdownOpen)}
                       className="flex items-center rounded-md border border-border-light px-3 py-1 text-sm text-text-secondary"
                     >
-                      {'Number of Assignments'}
+                      {selectedAssignmentNumber || 'Select Number of Assignments'}
                       <ChevronDown className="ml-1 h-4 w-4" />
                     </Menu.MenuButton>
                   }

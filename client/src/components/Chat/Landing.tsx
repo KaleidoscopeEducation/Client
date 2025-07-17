@@ -143,7 +143,6 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
   }, [lineCount, description, textHasMultipleLines, contentHeight]);
 
 
-
   //Original greeting text code
   // const greetingText =
   //   typeof startupConfig?.interface?.customWelcome === 'string'
@@ -156,8 +155,8 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
     typeof startupConfig?.interface?.customWelcome === 'string'
       ? getGreeting()
       : getGreeting() + (user?.name ? ', ' + user.name : '');
-  const classroomGreeting = 'Lets get started lesson planning!';
-  const startGreeting = 'Ask me anything to get the process going 😃';
+  const classroomGreeting = 'Need help crafting the perfect lesson plan?';
+  const startGreeting = 'Ask anything to get the process going 😃';
   const studentGreeting = 'Lets customize your teaching tools! 🧑‍🎓';
 
   if (mode === 'student') {
@@ -199,7 +198,7 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
               </TooltipAnchor>
             )}
           </div>
-          {((isAgent || isAssistant) && name) || name ? (
+          {/* {((isAgent || isAssistant) && name) || name ? (
             <div className="flex flex-col items-center gap-0 p-2">
               <SplitText
                 key={`split-text-${name}`}
@@ -230,7 +229,21 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
               rootMargin="0px"
               onLineCountChange={handleLineCountChange}
             />
-          )}
+          )} */}
+          <SplitText
+            key={`split-text-${greetingText}${user?.name ? '-user' : ''}`}
+            text={greetingText}
+            // className={`${getTextSizeClass(greetingText)} text-brand-teal font-medium text-text-primary`}
+            className={`${getTextSizeClass(greetingText)} font-medium text-text-primary`}
+            delay={50}
+            textAlign="center"
+            animationFrom={{ opacity: 0, transform: 'translate3d(0,50px,0)' }}
+            animationTo={{ opacity: 1, transform: 'translate3d(0,0,0)' }}
+            easing={easings.easeOutCubic}
+            threshold={0}
+            rootMargin="0px"
+            onLineCountChange={handleLineCountChange}
+          />
         </div>
         {description && (
           <div className="animate-fadeIn mt-4 max-w-md text-center text-sm font-normal text-text-primary">

@@ -1,42 +1,67 @@
 import { useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
-import useAuthSearchTool from '~/hooks/Plugins/useAuthSearchTool';
-import type { SearchApiKeyFormData } from '~/hooks/Plugins/useAuthSearchTool';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { modeState, Mode } from '~/store/mode';
+import { useQueryClient } from '@tanstack/react-query';
+import store from '~/store';
+import type { TMessage, TStartupConfig } from 'librechat-data-provider';
+import { QueryKeys, Constants } from 'librechat-data-provider';
+import { useNavigate } from 'react-router-dom';
 
-export default function useGenFilesForm({
+export interface FileGenFormData {
+  assistant: string;
+  assignmentCount: number;
+  notes: string;
+  index?: string;
+}
+
+export default function useFileGenForm({
   onSubmit,
-  onRevoke,
+  index = 0,
+  mode = null,
 }: {
-  onSubmit?: () => void;
-  onRevoke?: () => void;
+  onSubmit?: (data: FileGenFormData) => void;
 }) {
-  const methods = useForm<SearchApiKeyFormData>();
+  const methods = useForm<FileGenFormData>();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { installTool, removeTool } = useAuthSearchTool({ isEntityTool: true });
-  const { reset } = methods;
+  const setMode = useSetRecoilState(modeState);
+  const queryClient = useQueryClient();
+  const { conversation } = store.useCreateConversationAtom(index);
+  const navigate = useNavigate();
 
-  const onSubmitHandler = useCallback(
-    (data: SearchApiKeyFormData) => {
-      reset();
-      installTool(data);
+  const submitHandler = useCallback(
+    (data: FileGenFormData) => {
+      // 🟢 THIS is where you run ANY logic you need
+      // e.g. send to backend or start GPT call
+
+      setMode(mode);
+      /* 1️⃣ – Ctrl/Cmd‑click opens a blank chat in a new tab */
+      // window.open('/c/new', '_blank');
+      /* 2️⃣ – wipe the message cache for the current conversation */
+      queryClient.setQueryData<TMessage[]>(
+        [QueryKeys.messages, conversation?.conversationId ?? Constants.NEW_CONVO],
+        [],
+      );
+      /* 3️⃣ – ensure future queries refetch fresh data */
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.messages] });
+      /* 4️⃣ – spin up a brand‑new conversation */
+      // newConvo();
+      navigate('/c/new', { state: { focusChat: true } });
+
+      console.log('✔️ Student-Help data', data);
+      onSubmit?.(data);
+
+      // close dialog and clear form
+      methods.reset();
       setIsDialogOpen(false);
-      onSubmit?.();
     },
-    [onSubmit, reset, installTool],
+    [onSubmit, methods],
   );
-
-  const handleRevokeApiKey = useCallback(() => {
-    reset();
-    removeTool();
-    setIsDialogOpen(false);
-    onRevoke?.();
-  }, [reset, onRevoke, removeTool]);
 
   return {
     methods,
     isDialogOpen,
     setIsDialogOpen,
-    handleRevokeApiKey,
-    onSubmit: onSubmitHandler,
+    onSubmit: submitHandler,
   };
 }
