@@ -76,7 +76,7 @@ export default function FileGenDialog({
 
         setSelectedSubject('art-assistant');
         setValue('assistant', 'art-assistant');
-        handleSelectSpec(spec);
+        // handleSelectSpec(spec);
       },
     },
     {
@@ -88,7 +88,7 @@ export default function FileGenDialog({
 
         setSelectedSubject('creative-writing-assistant');
         setValue('assistant', 'creative-writing-assistant');
-        handleSelectSpec(spec);
+        // handleSelectSpec(spec);
       },
     },
     {
@@ -100,7 +100,7 @@ export default function FileGenDialog({
 
         setSelectedSubject('gardening-assistant');
         setValue('assistant', 'gardening-assistant');
-        handleSelectSpec(spec);
+        // handleSelectSpec(spec);
       },
     },
     {
@@ -112,7 +112,7 @@ export default function FileGenDialog({
 
         setSelectedSubject('yoga-assistant');
         setValue('assistant', 'yoga-assistant');
-        handleSelectSpec(spec);
+        // handleSelectSpec(spec);
       },
     },
     {
@@ -124,7 +124,7 @@ export default function FileGenDialog({
 
         setSelectedSubject('music-assistant');
         setValue('assistant', 'music-assistant');
-        handleSelectSpec(spec);
+        // handleSelectSpec(spec);
       },
     },
   ];

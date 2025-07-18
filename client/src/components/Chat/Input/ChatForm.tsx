@@ -378,7 +378,7 @@ const ChatForm = memo(({ index = 0 }: { index?: number }) => {
                   {mode === 'student' && (
                     <div className={`${isRTL ? 'mr-2' : 'ml-2'}`}>
                       <ModelSelectorProvider startupConfig={startupConfig}>
-                        <FileGenButton />
+                        <FileGenButton conversationId={conversationId} index={index} />
                       </ModelSelectorProvider>
                     </div>
                   )}

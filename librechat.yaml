@@ -101,8 +101,8 @@ interface:
   endpointsMenu: false
   modelSelect: false
   parameters: true
-  sidePanel: false
-  presets: true
+  sidePanel: true
+  presets: false
   prompts: true
   bookmarks: true
   multiConvo: true
@@ -200,7 +200,7 @@ endpoints:
     pollIntervalMs: 3000  # Polling interval for checking assistant updates
     timeoutMs: 180000  # Timeout for assistant operations
 #   #   # Should only be one or the other, either `supportedIds` or `excludedIds`
-    supportedIds: ["asst_MbxQpSNgSc0QG4MFRhfPTU6Z", "asst_nMVHhlYGOylY81IAJuI17a4j"]
+    supportedIds: ["asst_MbxQpSNgSc0QG4MFRhfPTU6Z", "asst_nMVHhlYGOylY81IAJuI17a4j", "asst_Qz7DWMoUtp9cKAR7HRQ3fTYZ", "asst_W4338pmKtKG5opAjNEK7iAFA", "asst_PSrtphPk13nA0f2YjeH5PEth", "asst_CIZHPxU8AG3FEJzgsG4en5BB"]
     # excludedIds: ["asst_KUAWXPcoPX56VvNnytlc0XsH"]
 #   #   # Only show assistants that the user created or that were created externally (e.g. in Assistants playground).
 #   #   # privateAssistants: false # Does not work with `supportedIds` or `excludedIds`

@@ -37,7 +37,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import store from '~/store';
 
-
 // const storageCondition = (value: unknown, rawCurrentValue?: string | null) => {
 //   if (rawCurrentValue) {
 //     try {
@@ -76,7 +75,6 @@ function StudentDetailsFormButton({
     buttonClassName?: string;
   };
 }) {
-
   const setMode = useSetRecoilState(modeState);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
