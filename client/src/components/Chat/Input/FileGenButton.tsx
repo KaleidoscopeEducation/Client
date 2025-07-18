@@ -134,7 +134,7 @@ function FileGenFormButton({
         className={`flex w-full items-center gap-0 rounded-lg py-3 text-left hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring ${className ?? ''} ${buttonClassName || ''}`}
       >
         <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center">
-          <FilePlus2 className="h-5 w-5" color="#ebb951" size={1}></FilePlus2>
+          <FilePlus2 className="h-5 w-5" color="#007BFF" size={1}></FilePlus2>
         </span>
         <div className="ml-4 flex flex-col leading-snug">
           <span className="text-sm font-medium">{label}</span>

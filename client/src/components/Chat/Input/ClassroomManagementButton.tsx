@@ -126,7 +126,7 @@ function ClassroomManagementButton({
         aria-label="Generate Files"
       >
         <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center">
-          <UsersRound className="h-5 w-5" color="#215156" size={1}></UsersRound>
+          <UsersRound className="h-5 w-5" color="#72b147" size={1}></UsersRound>
         </span>
         <div className="ml-4 flex flex-col leading-snug">
           <span className="text-sm font-medium">{label}</span>

@@ -118,7 +118,7 @@ function GetStartedButton({
         <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center">
           <MessageCircleQuestion
             className="h-5 w-5"
-            color="#599bf8"
+            color="#ebb951"
             size={3}
           ></MessageCircleQuestion>
         </span>

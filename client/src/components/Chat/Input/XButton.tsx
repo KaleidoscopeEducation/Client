@@ -66,7 +66,7 @@ function XButton({
         className={`flex w-full items-center justify-start gap-3 rounded-lg py-3 text-left hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring ${className ?? ''}`}
       >
         <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center">
-          <X className="h-5 w-5" color="#599bf8" size={3}></X>
+          <X className="h-5 w-5" color="#007BFF" size={3}></X>
         </span>
       </Button>
     </>
