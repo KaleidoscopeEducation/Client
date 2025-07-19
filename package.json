@@ -70,7 +70,9 @@
     "b:test:api": "cd api && bun run b:test",
     "b:balance": "bun config/add-balance.js",
     "b:list-balances": "bun config/list-balances.js",
-    "reset-terms": "node config/reset-terms.js"
+    "reset-terms": "node config/reset-terms.js",
+    "invite-from-csv": "python3 scripts/mass_invite.py",
+    "delete-from-csv": "python3 scripts/mass_delete.py"
   },
   "repository": {
     "type": "git",
