@@ -193,7 +193,7 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
     const { conversation: convoData = {} } = await databasePromise;
     const conversation = { ...convoData };
     conversation.title =
-      conversation && !conversation.title ? null : conversation?.title || 'New Chat';
+      conversation && !conversation.title ? null : conversation?.title || 'New Chat2';
 
     const latestUserMessage = reqDataContext.userMessage;
 

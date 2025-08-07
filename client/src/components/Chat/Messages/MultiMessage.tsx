@@ -43,9 +43,27 @@ export default function MultiMessage({
   }
 
   const message = messagesTree[messagesTree.length - siblingIdx - 1] as TMessage | undefined;
-
+  // console.log('here at the message log');
+  // console.log(message);
   if (!message) {
     return null;
+  }
+  // console.log(message);
+
+  if (message.text === 'First Message') {
+    return (
+      // <div className="text-center italic opacity-50">
+      <MessageParts
+        key={message.messageId}
+        message={message}
+        currentEditId={currentEditId}
+        setCurrentEditId={setCurrentEditId}
+        siblingIdx={messagesTree.length - siblingIdx - 1}
+        siblingCount={messagesTree.length}
+        setSiblingIdx={setSiblingIdxRev}
+      />
+      // </div>
+    );
   }
 
   if (isAssistantsEndpoint(message.endpoint) && message.content) {

@@ -82,9 +82,9 @@ const useNewConvo = (index = 0) => {
           // endpoint matches or is null (to allow endpoint change),
           // and buildDefaultConversation is true
           defaultPreset &&
-          !preset &&
-          (defaultPreset.endpoint === endpoint || !endpoint) &&
-          buildDefaultConversation
+            !preset &&
+            (defaultPreset.endpoint === endpoint || !endpoint) &&
+            buildDefaultConversation
             ? defaultPreset
             : preset;
 
@@ -243,7 +243,7 @@ const useNewConvo = (index = 0) => {
 
       const conversation = {
         conversationId: Constants.NEW_CONVO as string,
-        title: 'New Chat',
+        title: 'New Chat 13',
         endpoint: null,
         ...template,
         createdAt: '',

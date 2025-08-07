@@ -174,7 +174,7 @@ router.post(
       const { conversation = {} } = await response.databasePromise;
       delete response.databasePromise;
       conversation.title =
-        conversation && !conversation.title ? null : conversation?.title || 'New Chat';
+        conversation && !conversation.title ? null : conversation?.title || 'New Chat8';
 
       sendMessage(res, {
         title: conversation.title,
