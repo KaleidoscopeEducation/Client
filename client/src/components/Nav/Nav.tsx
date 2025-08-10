@@ -111,6 +111,7 @@ const Nav = memo(
 
     const toggleNavVisible = useCallback(() => {
       setNavVisible((prev: boolean) => {
+        console.log('toggling nabv visible');
         localStorage.setItem('navVisible', JSON.stringify(!prev));
         return !prev;
       });

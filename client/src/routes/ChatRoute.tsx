@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { Constants, EModelEndpoint } from 'librechat-data-provider';
 import { useGetModelsQuery } from 'librechat-data-provider/react-query';
@@ -13,10 +13,23 @@ import temporaryStore from '~/store/temporary';
 import { Spinner } from '~/components/svg';
 import { useRecoilCallback } from 'recoil';
 import store from '~/store';
+import { useLocation } from 'react-router-dom';
 
 export default function ChatRoute() {
   const { data: startupConfig } = useGetStartupConfig();
   const { isAuthenticated, user } = useAuthRedirect();
+  const location = useLocation() as { state?: { initialTitle?: string } };
+  // const initialTitle = location.state?.initialTitle || 'New Chat Default';
+
+  const initialTitle = useMemo(() => {
+    return location.state?.initialTitle ?? sessionStorage.getItem('pendingTitle') ?? undefined;
+  }, [location.state]);
+
+  useEffect(() => {
+    if (initialTitle) {
+      sessionStorage.removeItem('pendingTitle');
+    }
+  }, [initialTitle]);
 
   const setIsTemporary = useRecoilCallback(
     ({ set }) =>
@@ -54,6 +67,8 @@ export default function ChatRoute() {
     }
   }, [conversationId, isTemporaryChat, setIsTemporary]);
 
+  // console.log('ChatRoute: initialTitle', initialTitle);
+
   /** This effect is mainly for the first conversation state change on first load of the page.
    *  Adjusting this may have unintended consequences on the conversation state.
    */
@@ -61,6 +76,12 @@ export default function ChatRoute() {
     const shouldSetConvo =
       (startupConfig && !hasSetConversation.current && !modelsQuery.data?.initial) ?? false;
     /* Early exit if startupConfig is not loaded and conversation is already set and only initial models have loaded */
+
+    console.log('ChatRoute: startupConfig', startupConfig);
+    console.log('ChatRoute: hasSetConversation', hasSetConversation.current);
+    console.log('ChatRoute: modelsQuery.data?.initial', modelsQuery.data?.initial);
+    console.log('ChatRoute: conversation', conversation);
+    console.log('ChatRoute: shouldSetConvo', shouldSetConvo);
     if (!shouldSetConvo) {
       return;
     }
@@ -70,7 +91,10 @@ export default function ChatRoute() {
       logger.log('conversation', 'ChatRoute, new convo effect', conversation);
       newConversation({
         modelsData: modelsQuery.data,
-        template: conversation ? conversation : undefined,
+        template: {
+          ...(conversation ?? {}),
+          ...(initialTitle ? { title: initialTitle } : {}),
+        },
         ...(spec ? { preset: getModelSpecPreset(spec) } : {}),
       });
 
@@ -94,7 +118,10 @@ export default function ChatRoute() {
       logger.log('conversation', 'ChatRoute new convo, assistants effect', conversation);
       newConversation({
         modelsData: modelsQuery.data,
-        template: conversation ? conversation : undefined,
+        template: {
+          ...(conversation ?? {}),
+          ...(initialTitle ? { title: initialTitle } : {}),
+        },
         ...(spec ? { preset: getModelSpecPreset(spec) } : {}),
       });
       hasSetConversation.current = true;

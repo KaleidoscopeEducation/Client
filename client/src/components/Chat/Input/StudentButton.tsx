@@ -42,6 +42,8 @@ import Conversation from '~/components/Conversations/Convo';
 import useConversationNameForm from '~/hooks/Plugins/useConversationNameForm';
 import useChatFunctions from '~/hooks/Chat/useChatFunctions';
 import { NotificationSeverity } from '~/common';
+import { useChatContext } from '~/Providers';
+
 
 // const storageCondition = (value: unknown, rawCurrentValue?: string | null) => {
 //   if (rawCurrentValue) {
@@ -85,7 +87,8 @@ function StudentDetailsFormButton({
   const setMode = useSetRecoilState(modeState);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { conversation } = store.useCreateConversationAtom(index);
+  // const { conversation } = store.useCreateConversationAtom(index);
+  const { conversation, newConversation } = useChatContext();
   const [currentMode] = useRecoilState(modeState);
   const { submitMessage, submitPrompt } = useSubmitMessage();
   const { mutateAsync: renameConversation } = useUpdateConversationMutation(
@@ -99,10 +102,16 @@ function StudentDetailsFormButton({
   const { methods, onSubmit, isDialogOpen, setIsDialogOpen } = useConversationNameForm({
     mode,
     onSubmit: (form) => {
-      pendingTitleRef.current = form.studentName.trim() || 'Untitled'
+      pendingTitleRef.current = form.studentName.trim() || 'Untitled';
       console.log(form);
 
-      navigate('/c/new', { state: { focusChat: true } });
+      const title = form.studentName.trim() || 'New Chat Default 223';
+
+      sessionStorage.setItem('pendingTitle', title);
+
+      // navigate('/c/new', { state: { focusChat: true, initialTitle: title } });
+
+      newConversation({ template: { title } });
 
       console.log('Conversation Name submitted');
       console.log(conversation?.conversationId);
@@ -113,10 +122,10 @@ function StudentDetailsFormButton({
       sendMessage('First Message').then(() => {
         console.log('First Message sent');
 
-        performRenameConversation(
-          pendingTitleRef.current ?? '',
-          conversation?.conversationId ?? Constants.NEW_CONVO,
-        );
+        // performRenameConversation(
+        //   pendingTitleRef.current ?? '',
+        //   conversation?.conversationId ?? Constants.NEW_CONVO,
+        // );
       });
     },
   });
@@ -157,7 +166,8 @@ function StudentDetailsFormButton({
       [],
     );
     queryClient.invalidateQueries({ queryKey: [QueryKeys.messages] });
-    navigate('/c/new', { state: { focusChat: true } });
+    // navigate('/c/new', { state: { focusChat: true } });
+    newConversation();
 
     console.log('Student Button Pressed');
     setIsDialogOpen(!isDialogOpen);
