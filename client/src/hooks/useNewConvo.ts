@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { useGetModelsQuery } from 'librechat-data-provider/react-query';
 import {
   Constants,
@@ -51,6 +51,7 @@ const useNewConvo = (index = 0) => {
   const { pauseGlobalAudio } = usePauseGlobalAudio(index);
   const saveDrafts = useRecoilValue<boolean>(store.saveDrafts);
   const resetBadges = useResetChatBadges();
+  const location = useLocation() as { state?: Record<string, unknown> };
 
   const { mutateAsync } = useDeleteFilesMutation({
     onSuccess: () => {
@@ -74,6 +75,12 @@ const useNewConvo = (index = 0) => {
         _disableParams?: boolean,
       ) => {
         const modelsConfig = modelsData ?? modelsQuery.data;
+        const manualTitle =
+          conversation?.title && !/^New Chat/i.test(conversation.title)
+            ? conversation.title
+            : undefined;
+
+        console.log('manualTitle', manualTitle);
         const { endpoint = null } = conversation;
         const buildDefaultConversation = (endpoint === null || buildDefault) ?? false;
         const activePreset =
@@ -82,9 +89,9 @@ const useNewConvo = (index = 0) => {
           // endpoint matches or is null (to allow endpoint change),
           // and buildDefaultConversation is true
           defaultPreset &&
-          !preset &&
-          (defaultPreset.endpoint === endpoint || !endpoint) &&
-          buildDefaultConversation
+            !preset &&
+            (defaultPreset.endpoint === endpoint || !endpoint) &&
+            buildDefaultConversation
             ? defaultPreset
             : preset;
 
@@ -155,6 +162,10 @@ const useNewConvo = (index = 0) => {
           });
         }
 
+        if (manualTitle) {
+          conversation.title = manualTitle;
+        }
+
         if (disableParams === true) {
           conversation.disableParams = true;
         }
@@ -190,18 +201,22 @@ const useNewConvo = (index = 0) => {
 
         if (conversation.conversationId === Constants.NEW_CONVO && !modelsData) {
           const appTitle = localStorage.getItem(LocalStorageKeys.APP_TITLE) ?? '';
+          console.log('appTitle', appTitle);
           if (appTitle) {
             document.title = appTitle;
           }
           const path = `/c/${Constants.NEW_CONVO}${getParams()}`;
-          navigate(path, { state: { focusChat: true } });
+          // navigate(path, { state: { focusChat: true } });
+          navigate(path, { state: { ...(location.state ?? {}), focusChat: true } });
           return;
         }
 
         const path = `/c/${conversation.conversationId}${getParams()}`;
         navigate(path, {
           replace: true,
-          state: disableFocus ? {} : { focusChat: true },
+          state: disableFocus
+            ? (location.state ?? {})
+            : { ...(location.state ?? {}), focusChat: true },
         });
       },
     [endpointsConfig, defaultPreset, assistantsListMap, modelsQuery.data],
@@ -238,12 +253,14 @@ const useNewConvo = (index = 0) => {
         isParamEndpoint(_preset?.endpoint ?? '', _preset?.endpointType ?? '');
       const template =
         paramEndpoint === true && templateConvoId && templateConvoId === Constants.NEW_CONVO
-          ? { endpoint: _template.endpoint }
+          ? { endpoint: _template.endpoint, title: _template.title }
           : _template;
+
+      console.log('New conversation template:', template);
 
       const conversation = {
         conversationId: Constants.NEW_CONVO as string,
-        title: 'New Chat',
+        title: 'New Chat 13',
         endpoint: null,
         ...template,
         createdAt: '',

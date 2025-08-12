@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { CSSTransition } from 'react-transition-group';
 import type { TMessage } from 'librechat-data-provider';
@@ -18,6 +18,14 @@ export default function MessagesView({
   const { screenshotTargetRef } = useScreenshot();
   const scrollButtonPreference = useRecoilValue(store.showScrollButton);
   const [currentEditId, setCurrentEditId] = useState<number | string | null>(-1);
+
+  const messagesTreeFiltered = useMemo(
+    () => _messagesTree?.filter((m) => m.text !== 'First Message') ?? [],
+    [_messagesTree],
+  );
+
+  // console.log(_messagesTree);
+  // console.log(messagesTreeFiltered);
 
   const {
     conversation,

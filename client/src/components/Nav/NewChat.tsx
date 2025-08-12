@@ -9,6 +9,9 @@ import { getDefaultModelSpec, getModelSpecPreset } from '~/utils';
 import { TooltipAnchor, Button } from '~/components/ui';
 import { useLocalize, useNewConvo } from '~/hooks';
 import store from '~/store';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { modeState, Mode } from '~/store/mode';
+import { Home } from 'lucide-react';
 
 export default function NewChat({
   index = 0,
@@ -30,8 +33,12 @@ export default function NewChat({
   const localize = useLocalize();
   const { conversation } = store.useCreateConversationAtom(index);
 
+  const setMode = useSetRecoilState(modeState);
+
   const clickHandler: React.MouseEventHandler<HTMLButtonElement> = useCallback(
     (e) => {
+      console.log(modeState);
+      setMode(null);
       if (e.button === 0 && (e.ctrlKey || e.metaKey)) {
         window.open('/c/new', '_blank');
         return;
@@ -43,6 +50,7 @@ export default function NewChat({
       queryClient.invalidateQueries([QueryKeys.messages]);
       newConvo();
       navigate('/c/new', { state: { focusChat: true } });
+      // localStorage.setItem('navVisible', 'true');
       if (isSmallScreen) {
         toggleNav();
       }
@@ -82,7 +90,7 @@ export default function NewChat({
                 className="rounded-full border-none bg-transparent p-2 hover:bg-surface-hover md:rounded-xl"
                 onClick={clickHandler}
               >
-                <NewChatIcon className="icon-md md:h-6 md:w-6" />
+                <Home className="icon-md md:h-6 md:w-6" />
               </Button>
             }
           />

@@ -21,26 +21,17 @@ export default function StudentHelpDialog({
   isOpen,
   onSubmit,
   onOpenChange,
-  isToolAuthenticated,
   register,
   triggerRef,
 }: {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (data: StudentHelpFormData) => void;
-  isToolAuthenticated: boolean;
   register: UseFormRegister<StudentHelpFormData>;
   triggerRef?: React.RefObject<HTMLInputElement>;
 }) {
   const localize = useLocalize();
   const { data: config } = useGetStartupConfig();
-  const [selectedReranker, setSelectedReranker] = useState<
-    RerankerTypes.JINA | RerankerTypes.COHERE
-  >(
-    config?.webSearch?.rerankerType === RerankerTypes.COHERE
-      ? RerankerTypes.COHERE
-      : RerankerTypes.JINA,
-  );
 
   const [providerDropdownOpen, setProviderDropdownOpen] = useState(false);
   // const [scraperDropdownOpen, setScraperDropdownOpen] = useState(false);

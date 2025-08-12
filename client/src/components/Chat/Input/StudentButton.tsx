@@ -1,5 +1,5 @@
 import debounce from 'lodash/debounce';
-import React, { memo, useMemo, useCallback, useRef } from 'react';
+import React, { memo, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { TerminalSquareIcon } from 'lucide-react';
 import {
@@ -23,19 +23,27 @@ import {
 } from '~/hooks';
 import CheckboxButton from '~/components/ui/CheckboxButton';
 import useLocalStorage from '~/hooks/useLocalStorageAlt';
-import { useVerifyAgentToolAuth } from '~/data-provider';
+import { useVerifyAgentToolAuth, useUpdateConversationMutation } from '~/data-provider';
 import { ephemeralAgentByConvoId } from '~/store';
 import { Button } from '~/components/ui';
 import { UserPlus } from 'lucide-react';
 import StudentHelpDialog from '../StudentHelp/StudentHelpDialog';
 import { on } from 'events';
 import { StudentHelpFormData } from '~/hooks/Plugins/useStudentHelpForm';
+import ConversationNameDialog from '../ConversationName/ConversationNameDialog';
 import { useForm, FormProvider } from 'react-hook-form';
 import { useModelSelectorContext } from '../Menus/Endpoints/ModelSelectorContext';
 import { modeState, Mode } from '~/store/mode';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import store from '~/store';
+import { useSubmitMessage } from '~/hooks';
+import Conversation from '~/components/Conversations/Convo';
+import useConversationNameForm from '~/hooks/Plugins/useConversationNameForm';
+import useChatFunctions from '~/hooks/Chat/useChatFunctions';
+import { NotificationSeverity } from '~/common';
+import { useChatContext } from '~/Providers';
+
 
 // const storageCondition = (value: unknown, rawCurrentValue?: string | null) => {
 //   if (rawCurrentValue) {
@@ -75,11 +83,52 @@ function StudentDetailsFormButton({
     buttonClassName?: string;
   };
 }) {
+  const triggerRef = useRef<HTMLInputElement>(null);
   const setMode = useSetRecoilState(modeState);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { conversation } = store.useCreateConversationAtom(index);
+  // const { conversation } = store.useCreateConversationAtom(index);
+  const { conversation, newConversation } = useChatContext();
   const [currentMode] = useRecoilState(modeState);
+  const { submitMessage, submitPrompt } = useSubmitMessage();
+  const { mutateAsync: renameConversation } = useUpdateConversationMutation(
+    conversation?.conversationId ?? '',
+  );
+
+  const updateConvoMutation = useUpdateConversationMutation(conversation?.conversationId ?? '');
+
+  const pendingTitleRef = useRef<string | null>(null);
+
+  const { methods, onSubmit, isDialogOpen, setIsDialogOpen } = useConversationNameForm({
+    mode,
+    onSubmit: (form) => {
+      pendingTitleRef.current = form.studentName.trim() || 'Untitled';
+      console.log(form);
+
+      const title = form.studentName.trim() || 'New Chat Default 223';
+
+      sessionStorage.setItem('pendingTitle', title);
+
+      // navigate('/c/new', { state: { focusChat: true, initialTitle: title } });
+
+      newConversation({ template: { title } });
+
+      console.log('Conversation Name submitted');
+      console.log(conversation?.conversationId);
+
+      // submitPrompt({ text: 'First Message' });
+      console.log(conversation?.conversationId);
+      setIsDialogOpen(false);
+      sendMessage('First Message').then(() => {
+        console.log('First Message sent');
+
+        // performRenameConversation(
+        //   pendingTitleRef.current ?? '',
+        //   conversation?.conversationId ?? Constants.NEW_CONVO,
+        // );
+      });
+    },
+  });
 
   const {
     // LibreChat
@@ -103,7 +152,11 @@ function StudentDetailsFormButton({
   const findSpecByName = <T extends { name: string }>(specs: T[], target: string): T | undefined =>
     specs.find((s) => s.name === target);
 
-  const handleChange = () => {
+  const sendMessage = async (message: string) => {
+    submitMessage({ text: 'First Message' });
+  };
+
+  const handleSubmit = () => {
     const spec = findSpecByName(modelSpecs, 'data-gathering-assistant');
     if (!spec) return;
 
@@ -113,19 +166,92 @@ function StudentDetailsFormButton({
       [],
     );
     queryClient.invalidateQueries({ queryKey: [QueryKeys.messages] });
-    navigate('/c/new', { state: { focusChat: true } });
+    // navigate('/c/new', { state: { focusChat: true } });
+    newConversation();
 
     console.log('Student Button Pressed');
-    // setIsDialogOpen(!isDialogOpen);
+    setIsDialogOpen(!isDialogOpen);
     handleSelectSpec(spec);
   };
+
+  // const handleChange = useCallback(
+  //   (e: React.ChangeEvent<HTMLInputElement>, isChecked: boolean) => {
+  //     console.log('called handleChange');
+  //     setIsDialogOpen(true);
+  //     e.preventDefault();
+  //     return;
+  //   },
+  //   [setIsDialogOpen],
+  // );
+
+  const performRenameConversation = async (newTitle: string, conversationId: string) => {
+    try {
+      await updateConvoMutation.mutateAsync({
+        conversationId,
+        title: newTitle.trim() || localize('com_ui_untitled'),
+      });
+    } catch (error) {
+      showToast({
+        message: localize('com_ui_rename_failed'),
+        severity: NotificationSeverity.ERROR,
+        showIcon: true,
+      });
+    }
+  };
+
+  const openDialog = useCallback(() => {
+    console.log('Opening Student Help Dialog');
+    setIsDialogOpen(true);
+  }, [setIsDialogOpen]);
+
+  // useEffect(() => {
+  //   const wantedTitle = pendingTitleRef.current;
+  //   const convoId = conversation?.conversationId;
+
+  //   if (wantedTitle && convoId && convoId !== Constants.NEW_CONVO) {
+  //     renameConversation({ conversationId: convoId, title: wantedTitle })
+  //       .then(() => {
+  //         /* refresh sidebar cache so new title shows immediately */
+  //         queryClient.setQueryData(['conversations'], (prev: any[] | undefined) =>
+  //           prev?.map((c) => (c.conversationId === convoId ? { ...c, title: wantedTitle } : c)),
+  //         );
+  //       })
+  //       .catch(console.error)
+  //       .finally(() => {
+  //         pendingTitleRef.current = null; // run once only
+  //       });
+  //   }
+  // }, [conversation?.conversationId, renameConversation, queryClient]);
+
+  // useEffect(() => {
+  //   const wantedTitle = pendingTitleRef.current;
+  //   const convoId = conversation?.conversationId;
+
+  //   console.log('renaming convo in useeffect');
+  //   console.log('wantedTitle:', wantedTitle);
+  //   console.log('convoId:', convoId);
+  //   if (wantedTitle && convoId && convoId !== Constants.NEW_CONVO) {
+  //     renameConversation({ conversationId: convoId, title: wantedTitle })
+  //       .then(() => {
+  //         /* refresh sidebar cache so new title shows immediately */
+  //         queryClient.setQueryData(['conversations'], (prev: any[] | undefined) =>
+  //           prev?.map((c) => (c.conversationId === convoId ? { ...c, title: wantedTitle } : c)),
+  //         );
+  //       })
+  //       .catch(console.error)
+  //       .finally(() => {
+  //         pendingTitleRef.current = null; // run once only
+  //       });
+  //   }
+  //   /* 🔑 add renameConversation so effect re-fires with the fresh mutate fn */
+  // }, [conversation?.conversationId, renameConversation, queryClient]);
 
   return (
     <>
       <Button
         variant={currentMode === 'student' ? 'outline' : 'secondary'}
-        onClick={handleChange}
-        aria-label="Generate Files"
+        onClick={openDialog}
+        aria-label="Open student help dialog"
         className={`flex w-full items-center justify-start gap-3 rounded-lg py-3 pl-[30%] pr-[30%] text-left hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring ${className ?? ''} ${buttonClassName || ''}`}
       >
         <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center">
@@ -138,26 +264,36 @@ function StudentDetailsFormButton({
           </span>
         </div>
       </Button>
-      {/* <FormProvider {...methods}>
-        <StudentHelpDialog
-          // onSubmit={onSubmit}
+      <FormProvider {...methods}>
+        <ConversationNameDialog
+          // onSubmit={handleSubmit}
           onSubmit={methods.handleSubmit(onSubmit)}
-          authTypes={authTypes}
           isOpen={isDialogOpen}
           triggerRef={triggerRef}
           register={methods.register}
           // onRevoke={handleRevokeApiKey}
           onOpenChange={setIsDialogOpen}
           handleSubmit={methods.handleSubmit}
-          isToolAuthenticated={isAuthenticated}
+        // isToolAuthenticated={isAuthenticated}
         />
-      </FormProvider> */}
+      </FormProvider>
     </>
   );
 }
 
 export default memo(StudentDetailsFormButton);
-function setMode(mode: any) {
+
+function then(arg0: () => void) {
   throw new Error('Function not implemented.');
 }
 
+function localize(arg0: string): string {
+  throw new Error('Function not implemented.');
+}
+
+function showToast(arg0: { message: string; severity: any; showIcon: boolean; }) {
+  throw new Error('Function not implemented.');
+}
+// function setMode(mode: any) {
+//   throw new Error('Function not implemented.');
+// }

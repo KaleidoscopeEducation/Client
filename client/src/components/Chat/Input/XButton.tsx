@@ -24,6 +24,7 @@ import type { TMessage, TStartupConfig } from 'librechat-data-provider';
 import { modeState, Mode } from '~/store/mode';
 import { useNavigate } from 'react-router-dom';
 import store from '~/store';
+import { useChatContext } from '~/Providers';
 
 const label = 'Help Me Get Started';
 const description = 'A space for you to process your thoughts';
@@ -42,7 +43,8 @@ function XButton({
   const setMode = useSetRecoilState(modeState);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { conversation } = store.useCreateConversationAtom(index);
+  const { conversation, newConversation } = useChatContext();
+
   const { newConversation: newConvo } = useNewConvo(index);
 
   const handleChange = () => {
@@ -53,7 +55,9 @@ function XButton({
       [],
     );
     queryClient.invalidateQueries({ queryKey: [QueryKeys.messages] });
-    navigate('/c/new', { state: { focusChat: true } });
+    // navigate('/c/new', { state: { focusChat: true } });
+    newConversation();
+
     console.log('✔️ XButton Clicked. Going back to home.');
   };
 

@@ -142,16 +142,16 @@ const ChatForm = memo(({ index = 0 }: { index?: number }) => {
 
   const buttonSpecs = [
     {
+      Component: GetStartedButton,
+      mode: 'start',
+    },
+    {
       Component: StudentDetailsFormButton,
       mode: 'student',
     },
     {
       Component: ClassroomManagementButton,
       mode: 'classroom',
-    },
-    {
-      Component: GetStartedButton,
-      mode: 'start',
     },
   ] as const;
 
@@ -261,7 +261,7 @@ const ChatForm = memo(({ index = 0 }: { index?: number }) => {
               : 'sm:mb-10',
           )}
         >
-          <div className="aboveChatButtonContainer flex flex-wrap gap-2 px-4 md:flex-nowrap">
+          {/* <div className="aboveChatButtonContainer flex flex-wrap gap-2 px-4 md:flex-nowrap">
             {buttonSpecs.map(({ Component, mode }) => (
               <ModeButton
                 key={mode}
@@ -277,7 +277,7 @@ const ChatForm = memo(({ index = 0 }: { index?: number }) => {
                 }}
               />
             ))}
-          </div>
+          </div> */}
           <div className="relative flex h-full flex-1 items-stretch md:flex-col">
             <div className={cn('flex w-full items-center', isRTL && 'flex-row-reverse')}>
               {showPlusPopover && !isAssistantsEndpoint(endpoint) && (

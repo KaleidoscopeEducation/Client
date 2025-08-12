@@ -83,7 +83,7 @@ const createErrorMessage = ({
     const latestPartValue = latestContentPart?.[latestContentPart.type ?? ''];
     isValidContentPart =
       latestContentPart.type !== ContentTypes.TEXT ||
-      (latestContentPart.type === ContentTypes.TEXT && typeof latestPartValue === 'string')
+        (latestContentPart.type === ContentTypes.TEXT && typeof latestPartValue === 'string')
         ? true
         : latestPartValue?.value !== '';
   }
@@ -491,7 +491,7 @@ export default function useEventHandlers({
         requestMessage.parentMessageId === Constants.NO_PARENT
       ) {
         setTimeout(() => {
-          genTitle.mutate({ conversationId: conversation.conversationId as string });
+          // genTitle.mutate({ conversationId: conversation.conversationId as string });
         }, 2500);
       }
 
@@ -714,9 +714,9 @@ export default function useEventHandlers({
         } else {
           throw new Error(
             'Unexpected response from server; Status: ' +
-              response.status +
-              ' ' +
-              response.statusText,
+            response.status +
+            ' ' +
+            response.statusText,
           );
         }
       } catch (error) {
