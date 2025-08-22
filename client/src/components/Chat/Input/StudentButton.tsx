@@ -26,7 +26,7 @@ import useLocalStorage from '~/hooks/useLocalStorageAlt';
 import { useVerifyAgentToolAuth, useUpdateConversationMutation } from '~/data-provider';
 import { ephemeralAgentByConvoId } from '~/store';
 import { Button } from '~/components/ui';
-import { UserPlus } from 'lucide-react';
+import { UserPlus, UsersRound } from 'lucide-react';
 import StudentHelpDialog from '../StudentHelp/StudentHelpDialog';
 import { on } from 'events';
 import { StudentHelpFormData } from '~/hooks/Plugins/useStudentHelpForm';
@@ -59,8 +59,8 @@ import { useChatContext } from '~/Providers';
 //   return value !== undefined && value !== null && value !== '' && value !== false;
 // };
 
-const label = 'Get help with a student';
-const description = 'Interact with Kaleidoscope to better understand your student';
+const label = 'Help Others';
+const description = 'Get guidance on helping your students using therapeutic excertises and classroom management techniques';
 
 function StudentDetailsFormButton({
   conversationId,
@@ -201,6 +201,21 @@ function StudentDetailsFormButton({
 
   const openDialog = useCallback(() => {
     console.log('Opening Student Help Dialog');
+    // const spec = findSpecByName(modelSpecs, 'help-myself');
+    // if (!spec) return;
+    // console.log('setting mode to:', mode);
+    // setMode(mode);
+
+
+    // queryClient.setQueryData<TMessage[]>(
+    //   [QueryKeys.messages, conversation?.conversationId ?? Constants.NEW_CONVO],
+    //   [],
+    // );
+    // queryClient.invalidateQueries({ queryKey: [QueryKeys.messages] });
+    // navigate('/c/new', { state: { focusChat: true } });
+
+    // handleSelectSpec(spec);
+
     setIsDialogOpen(true);
   }, [setIsDialogOpen]);
 
@@ -252,10 +267,10 @@ function StudentDetailsFormButton({
         variant={currentMode === 'student' ? 'outline' : 'secondary'}
         onClick={openDialog}
         aria-label="Open student help dialog"
-        className={`flex w-full items-center justify-start gap-3 rounded-lg py-3 pl-[30%] pr-[30%] text-left hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring ${className ?? ''} ${buttonClassName || ''}`}
+        className={`flex w-full items-center justify-start gap-3 rounded-lg py-3 pl-[15%] pr-[30%] text-left hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring ${className ?? ''} ${buttonClassName || ''}`}
       >
         <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center">
-          <UserPlus className="h-5 w-5" color="#c28770" />
+          <UsersRound className="h-5 w-5" color="#c28770" />
         </span>
         <div className="ml-4 flex flex-col leading-snug">
           <span className="text-sm font-medium">{label}</span>

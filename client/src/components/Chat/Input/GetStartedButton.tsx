@@ -18,7 +18,7 @@ import useLocalStorage from '~/hooks/useLocalStorageAlt';
 import { useVerifyAgentToolAuth } from '~/data-provider';
 import { ephemeralAgentByConvoId } from '~/store';
 import { Button } from '~/components/ui';
-import { MessageCircleQuestion } from 'lucide-react';
+import { MessageCircleQuestion, UserRound } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import type { TMessage, TStartupConfig } from 'librechat-data-provider';
 import { modeState, Mode } from '~/store/mode';
@@ -40,8 +40,8 @@ import { useModelSelectorContext } from '../Menus/Endpoints/ModelSelectorContext
 //   return value !== undefined && value !== null && value !== '' && value !== false;
 // };
 
-const label = 'Help Me Get Started';
-const description = 'A space for you to process your thoughts';
+const label = 'Help Myself';
+const description = 'Get support for Primary or Secondary Trauma you are experiencing';
 
 function GetStartedButton({
   conversationId,
@@ -92,7 +92,7 @@ function GetStartedButton({
     specs.find((s) => s.name === target);
 
   const handleChange = () => {
-    const spec = findSpecByName(modelSpecs, 'data-gathering-assistant');
+    const spec = findSpecByName(modelSpecs, 'help-myself');
     if (!spec) return;
 
     console.log('setting mode to:', mode);
@@ -113,14 +113,14 @@ function GetStartedButton({
         variant={currentMode === 'start' ? 'outline' : 'secondary'}
         onClick={handleChange}
         aria-label={`${label} - ${description}`}
-        className={`flex w-full items-center justify-start gap-3 rounded-lg py-3 pl-[30%] pr-[30%] text-left hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring ${className ?? ''} ${buttonClassName || ''}`}
+        className={`flex w-full items-center justify-start gap-3 rounded-lg py-3 pl-[15%] pr-[30%] text-left hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring ${className ?? ''} ${buttonClassName || ''}`}
       >
         <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center">
-          <MessageCircleQuestion
+          <UserRound
             className="h-5 w-5"
             color="#ebb951"
             size={3}
-          ></MessageCircleQuestion>
+          ></UserRound>
         </span>
         <div className="ml-4 flex flex-col leading-snug">
           <span className="text-sm font-medium">{label}</span>
