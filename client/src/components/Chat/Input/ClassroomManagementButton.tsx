@@ -17,7 +17,7 @@ import useLocalStorage from '~/hooks/useLocalStorageAlt';
 import { useVerifyAgentToolAuth } from '~/data-provider';
 import { ephemeralAgentByConvoId } from '~/store';
 import { Button } from '~/components/ui';
-import { UsersRound } from 'lucide-react';
+import { UsersRound, MessageCircleQuestion } from 'lucide-react';
 import FileGenDialog from '~/components/Chat/FileGenerator/FileGenDialog';
 import { TextareaAutosize } from '~/components/ui';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
@@ -28,8 +28,8 @@ import { useNavigate } from 'react-router-dom';
 import type { TMessage, TStartupConfig } from 'librechat-data-provider';
 import { useModelSelectorContext } from '../Menus/Endpoints/ModelSelectorContext';
 
-const label = 'Classroom Management';
-const description = 'Help dealing with classroom situations';
+const label = 'Application Help';
+const description = 'Learn how to get the most out of the Kaleidoscope site';
 
 function ClassroomManagementButton({
   conversationId,
@@ -101,7 +101,7 @@ function ClassroomManagementButton({
     specs.find((s) => s.name === target);
 
   const handleChange = () => {
-    const spec = findSpecByName(modelSpecs, 'data-gathering-assistant');
+    const spec = findSpecByName(modelSpecs, 'application-help');
     if (!spec) return;
 
     console.log('setting mode to:', mode);
@@ -120,13 +120,17 @@ function ClassroomManagementButton({
   return (
     <>
       <Button
-        className={`flex w-full items-center justify-start gap-3 rounded-lg py-3 pl-[30%] pr-[30%] text-left hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring ${className ?? ''} ${buttonClassName || ''}`}
+        className={`flex w-full items-center justify-start gap-3 rounded-lg py-3 pl-[15%] pr-[30%] text-left hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring ${className ?? ''} ${buttonClassName || ''}`}
         variant={currentMode === 'classroom' ? 'outline' : 'secondary'}
         onClick={handleChange}
         aria-label="Generate Files"
       >
         <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center">
-          <UsersRound className="h-5 w-5" color="#72b147" size={1}></UsersRound>
+          <MessageCircleQuestion
+            className="h-5 w-5"
+            color="#72b147"
+            size={1}
+          ></MessageCircleQuestion>
         </span>
         <div className="ml-4 flex flex-col leading-snug">
           <span className="text-sm font-medium">{label}</span>
