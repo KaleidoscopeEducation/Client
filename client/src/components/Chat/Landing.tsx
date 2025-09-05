@@ -9,7 +9,7 @@ import { useLocalize, useAuthContext } from '~/hooks';
 import { getIconEndpoint, getEntity } from '~/utils';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { modeState } from '~/store/mode';
-
+import { sub } from 'date-fns';
 
 const containerClassName =
   'shadow-stroke relative flex h-full items-center justify-center rounded-full bg-white dark:bg-presentation dark:text-white text-black dark:after:shadow-none ';
@@ -116,11 +116,7 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
     setLineCount(count);
   }, []);
 
-  useEffect(() => {
-    if (contentRef.current) {
-      setContentHeight(contentRef.current.offsetHeight);
-    }
-  }, [lineCount, description]);
+
 
   const getDynamicMargin = useMemo(() => {
     let margin = 'mb-0';
@@ -142,7 +138,6 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
     return margin;
   }, [lineCount, description, textHasMultipleLines, contentHeight]);
 
-
   //Original greeting text code
   // const greetingText =
   //   typeof startupConfig?.interface?.customWelcome === 'string'
@@ -150,29 +145,59 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
   //     : getGreeting() + (user?.name ? ', ' + user.name : '');
 
   let greetingText: string;
+  let subheaderText: string | undefined;
+  let bulletPoints: string[] | undefined;
 
   const mainGreeting =
     typeof startupConfig?.interface?.customWelcome === 'string'
       ? getGreeting()
       : getGreeting() + (user?.name ? ', ' + user.name : '');
-  const classroomGreeting = 'Need help crafting the perfect lesson plan?';
-  const startGreeting = 'Ask anything to get the process going 😃';
-  const studentGreeting = 'Lets customize your teaching tools! 🧑‍🎓';
+  const classroomGreeting = 'Ask anything about how our process works 😃';
+
+  const startGreeting = 'Self-Reflection support';
+  const selfHelpSubheader = "A calm space to process how you're feeling.";
+  const selfHelpBulletPoints = [
+    'How have you been feeling the past week or so?',
+    'Has a recent event affected you?',
+    'Let me know whats on your mind, and we can talk about any weight you might be feeling.',
+  ];
+
+  const studentGreeting = 'Student & Classroom Support';
+
+  const helpOthersSubheader =
+    'You’re not alone here. Let’s gather some information to get the process going..';
+  const helpOthersBulletPoints = [
+    'Name',
+    'Age or Grade Level',
+    'Your Relationship to the Child (e.g., parent, teacher)',
+    'Does the child have any barriers such as learning disabilities, health conditions, language barriers or physical disabilities?',
+  ];
 
   if (mode === 'student') {
     //set greetingText to a default value for student mode
     greetingText = studentGreeting;
+    subheaderText = helpOthersSubheader;
+    bulletPoints = helpOthersBulletPoints;
   } else if (mode === 'classroom') {
     greetingText = classroomGreeting;
+
   } else if (mode === 'start') {
     greetingText = startGreeting;
+    subheaderText = selfHelpSubheader;
+    bulletPoints = selfHelpBulletPoints;
   } else {
     greetingText = mainGreeting;
   }
 
+  useEffect(() => {
+    if (contentRef.current) {
+      setContentHeight(contentRef.current.offsetHeight);
+    }
+  }, [lineCount, description, bulletPoints, subheaderText]);
+
   return (
     <div
-      className={`flex h-full transform-gpu flex-col items-center justify-center pb-16 transition-all duration-200 ${centerFormOnLanding ? 'max-h-full sm:max-h-0' : 'max-h-full'} ${getDynamicMargin}`}
+      className={`flex h-full min-h-[7dvh] transform-gpu flex-col items-center justify-center pb-16 transition-all duration-200 ${centerFormOnLanding ? 'max-h-full sm:max-h-0' : 'max-h-full'} ${getDynamicMargin}`}
     >
       <div ref={contentRef} className="flex flex-col items-center gap-0 p-2">
         <div
@@ -248,6 +273,25 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
         {description && (
           <div className="animate-fadeIn mt-4 max-w-md text-center text-sm font-normal text-text-primary">
             {description}
+          </div>
+        )}
+        {subheaderText && (
+          <p className="mt-3 max-w-prose text-sm font-medium text-text-primary">{subheaderText}</p>
+        )}
+
+        {bulletPoints && (
+          <div className="mt-3 w-full">
+            <div className="mx-auto max-w-[48ch] md:max-w-[92ch] flex flex-wrap justify-center gap-2">
+              {bulletPoints.map((point, i) => (
+                <span
+                  key={i}
+                  className="inline-flex items-center gap-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-1 text-sm text-gray-800"
+                >
+                  <span className="h-1.5 w-1.5 rounded-full bg-current opacity-70" />
+                  {point}
+                </span>
+              ))}
+            </div>
           </div>
         )}
       </div>

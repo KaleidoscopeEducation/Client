@@ -116,11 +116,7 @@ function GetStartedButton({
         className={`flex w-full items-center justify-start gap-3 rounded-lg py-3 pl-[15%] pr-[30%] text-left hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring ${className ?? ''} ${buttonClassName || ''}`}
       >
         <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center">
-          <UserRound
-            className="h-5 w-5"
-            color="#ebb951"
-            size={3}
-          ></UserRound>
+          <UserRound className="h-5 w-5" color="#ebb951" size={3}></UserRound>
         </span>
         <div className="ml-4 flex flex-col leading-snug">
           <span className="text-sm font-medium">{label}</span>

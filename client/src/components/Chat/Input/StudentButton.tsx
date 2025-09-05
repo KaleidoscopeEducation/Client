@@ -60,7 +60,7 @@ import { useChatContext } from '~/Providers';
 // };
 
 const label = 'Help Others';
-const description = 'Get guidance on helping your students using therapeutic excertises and classroom management techniques';
+const description = 'Get guidance on helping students using therapeutic excertises and classroom management techniques';
 
 function StudentDetailsFormButton({
   conversationId,
@@ -102,6 +102,12 @@ function StudentDetailsFormButton({
   const { methods, onSubmit, isDialogOpen, setIsDialogOpen } = useConversationNameForm({
     mode,
     onSubmit: (form) => {
+      const spec = findSpecByName(modelSpecs, 'help-others');
+
+      console.log(spec);
+      if (!spec) return;
+
+
       pendingTitleRef.current = form.studentName.trim() || 'Untitled';
       console.log(form);
 
@@ -119,14 +125,16 @@ function StudentDetailsFormButton({
       // submitPrompt({ text: 'First Message' });
       console.log(conversation?.conversationId);
       setIsDialogOpen(false);
-      sendMessage('First Message').then(() => {
-        console.log('First Message sent');
 
-        // performRenameConversation(
-        //   pendingTitleRef.current ?? '',
-        //   conversation?.conversationId ?? Constants.NEW_CONVO,
-        // );
-      });
+      handleSelectSpec(spec);
+      // sendMessage('First Message').then(() => {
+      // console.log('First Message sent');
+
+      // performRenameConversation(
+      //   pendingTitleRef.current ?? '',
+      //   conversation?.conversationId ?? Constants.NEW_CONVO,
+      // );
+      // });
     },
   });
 
@@ -157,7 +165,7 @@ function StudentDetailsFormButton({
   };
 
   const handleSubmit = () => {
-    const spec = findSpecByName(modelSpecs, 'data-gathering-assistant');
+    const spec = findSpecByName(modelSpecs, 'help-others');
     if (!spec) return;
 
     setMode(mode);
