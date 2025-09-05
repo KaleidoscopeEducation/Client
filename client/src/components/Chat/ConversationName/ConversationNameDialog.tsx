@@ -64,7 +64,8 @@ export default function ConversationNameDialog({
   const findSpecByName = <T extends { name: string }>(specs: T[], target: string): T | undefined =>
     specs.find((s) => s.name === target);
 
-  const title = 'Tell us a little more about your student';
+  const title = 'Would you like to set a conversation title to help you identify this chat later? (Optional)';
+
   const secondLine =
     'Select the class subject, the number of assignments, and add any details or instructions you want to include.';
   const assistantTitle = 'Assistant';
@@ -79,14 +80,14 @@ export default function ConversationNameDialog({
         main={
           <>
             <div className="mb-4 text-center font-medium">{title}</div>
-            <div className="mb-4 text-center text-sm">{secondLine}</div>
+            {/* <div className="mb-4 text-center text-sm">{secondLine}</div> */}
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="mb-6">
-                <div className="mb-2 flex items-center justify-between">
+                {/* <div className="mb-2 flex items-center justify-between">
                   <Label className="text-md w-fit font-medium">{additionalGuidanceTitle}</Label>
-                </div>
+                </div> */}
                 <Textarea
-                  placeholder={'What is the name of your student?'}
+                  placeholder={'What would you like to name this conversation?'}
                   autoComplete="one-time-code"
                   readOnly={true}
                   onFocus={(e) => (e.target.readOnly = false)}

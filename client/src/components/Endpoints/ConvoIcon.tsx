@@ -13,6 +13,7 @@ export default function ConvoIcon({
   containerClassName = '',
   context,
   size,
+  iconOverride = '',
 }: {
   conversation: t.TConversation | t.TPreset | null;
   endpointsConfig: t.TEndpointsConfig;
@@ -22,6 +23,7 @@ export default function ConvoIcon({
   context?: 'message' | 'nav' | 'landing' | 'menu-item';
   className?: string;
   size?: number;
+  iconOverride?: string;
 }) {
   const iconURL = conversation?.iconURL ?? '';
   let endpoint = conversation?.endpoint;
@@ -44,8 +46,14 @@ export default function ConvoIcon({
     ? (entity as t.Agent | undefined)?.avatar?.filepath
     : ((entity as t.Assistant | undefined)?.metadata?.avatar as string);
 
+  console.log(endpoint, 'endpoint in convo icon');
+  console.log(entity, 'entity in convo icon');
+  console.log(avatar, 'avatar in convo icon');
+  console.log(iconURL, 'iconURL in convo icon');
   const endpointIconURL = getEndpointField(endpointsConfig, endpoint, 'iconURL');
   const iconKey = getIconKey({ endpoint, endpointsConfig, endpointIconURL });
+
+  console.log(iconKey, 'iconKey in convo icon');
   const Icon = icons[iconKey] ?? null;
 
   return (
