@@ -64,7 +64,8 @@ export default function ConversationNameDialog({
   const findSpecByName = <T extends { name: string }>(specs: T[], target: string): T | undefined =>
     specs.find((s) => s.name === target);
 
-  const title = 'Would you like to set a conversation title to help you identify this chat later? (Optional)';
+  const title =
+    'Would you like to set a conversation title to help you identify this chat later? (Optional)';
 
   const secondLine =
     'Select the class subject, the number of assignments, and add any details or instructions you want to include.';

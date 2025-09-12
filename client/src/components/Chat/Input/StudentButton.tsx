@@ -102,7 +102,7 @@ function StudentDetailsFormButton({
   const { methods, onSubmit, isDialogOpen, setIsDialogOpen } = useConversationNameForm({
     mode,
     onSubmit: (form) => {
-      const spec = findSpecByName(modelSpecs, 'help-others');
+      const spec = findSpecByName(modelSpecs, 'TEST-help-others');
 
       console.log(spec);
       if (!spec) return;

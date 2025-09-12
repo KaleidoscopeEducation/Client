@@ -46,10 +46,6 @@ export default function ConvoIcon({
     ? (entity as t.Agent | undefined)?.avatar?.filepath
     : ((entity as t.Assistant | undefined)?.metadata?.avatar as string);
 
-  console.log(endpoint, 'endpoint in convo icon');
-  console.log(entity, 'entity in convo icon');
-  console.log(avatar, 'avatar in convo icon');
-  console.log(iconURL, 'iconURL in convo icon');
   const endpointIconURL = getEndpointField(endpointsConfig, endpoint, 'iconURL');
   const iconKey = getIconKey({ endpoint, endpointsConfig, endpointIconURL });
 

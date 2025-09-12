@@ -200,14 +200,14 @@ endpoints:
     pollIntervalMs: 3000  # Polling interval for checking assistant updates
     timeoutMs: 180000  # Timeout for assistant operations
 #   #   # Should only be one or the other, either `supportedIds` or `excludedIds`
-    supportedIds: ["asst_MbxQpSNgSc0QG4MFRhfPTU6Z", "asst_nMVHhlYGOylY81IAJuI17a4j", "asst_Qz7DWMoUtp9cKAR7HRQ3fTYZ", "asst_W4338pmKtKG5opAjNEK7iAFA", "asst_PSrtphPk13nA0f2YjeH5PEth", "asst_CIZHPxU8AG3FEJzgsG4en5BB", "asst_TyABQRLQpfCg4N3rj7RaXqCp", "asst_k9Y8EDVccsKiLPJcWEMVxPoz", "asst_FXINoLvYPXEaPotzXKvfMKdb"]
+    supportedIds: ["asst_MbxQpSNgSc0QG4MFRhfPTU6Z", "asst_nMVHhlYGOylY81IAJuI17a4j", "asst_Qz7DWMoUtp9cKAR7HRQ3fTYZ", "asst_W4338pmKtKG5opAjNEK7iAFA", "asst_PSrtphPk13nA0f2YjeH5PEth", "asst_CIZHPxU8AG3FEJzgsG4en5BB", "asst_TyABQRLQpfCg4N3rj7RaXqCp", "asst_k9Y8EDVccsKiLPJcWEMVxPoz", "asst_FXINoLvYPXEaPotzXKvfMKdb", "asst_mvyg3Ps8nb4aWaFCv2GMMk9d"]
     # excludedIds: ["asst_KUAWXPcoPX56VvNnytlc0XsH"]
 #   #   # Only show assistants that the user created or that were created externally (e.g. in Assistants playground).
 #   #   # privateAssistants: false # Does not work with `supportedIds` or `excludedIds`
 #   #   # (optional) Models that support retrieval, will default to latest known OpenAI models that support the feature
     retrievalModels: ["gpt-4-o"]
 #   #   # (optional) Assistant Capabilities available to all users. Omit the ones you wish to exclude. Defaults to list below.
-    capabilities: [ "tools"]
+    capabilities: [ "tools", "code_interpreter"]
 #   # agents:
 #   #   # (optional) Default recursion depth for agents, defaults to 25
 #   #   recursionLimit: 50
@@ -391,6 +391,14 @@ modelSpecs:
       preset:
         endpoint: "assistants"
         assistant_id: "asst_TyABQRLQpfCg4N3rj7RaXqCp"
+        model: "gpt-4o"
+    - name: "TEST-help-others"
+      label: "TEST-Help Others"
+      iconURL: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c28770' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M18 21a8 8 0 0 0-16 0'/><circle cx='10' cy='8' r='5'/><path d='M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3'/></svg>"
+      default: true
+      preset:
+        endpoint: "assistants"
+        assistant_id: "asst_mvyg3Ps8nb4aWaFCv2GMMk9d"
         model: "gpt-4o"
     - name: "help-myself"
       label: "Help Myself"

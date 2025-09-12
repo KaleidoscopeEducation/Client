@@ -38,32 +38,29 @@ export default function Header() {
       <div className="hide-scrollbar flex w-full items-center justify-between gap-2 overflow-x-auto">
         <div className="mx-1 flex items-center gap-2">
           <div
-            className={`flex items-center gap-2 ${
-              !isSmallScreen ? 'transition-all duration-200 ease-in-out' : ''
-            } ${
-              !navVisible
+            className={`flex items-center gap-2 ${!isSmallScreen ? 'transition-all duration-200 ease-in-out' : ''
+              } ${!navVisible
                 ? 'translate-x-0 opacity-100'
                 : 'pointer-events-none translate-x-[-100px] opacity-0'
-            }`}
+              }`}
           >
             <OpenSidebar setNavVisible={setNavVisible} />
             <HeaderNewChat />
           </div>
           <div
-            className={`flex items-center gap-2 ${
-              !isSmallScreen ? 'transition-all duration-200 ease-in-out' : ''
-            } ${!navVisible ? 'translate-x-0' : 'translate-x-[-100px]'}`}
+            className={`flex items-center gap-2 ${!isSmallScreen ? 'transition-all duration-200 ease-in-out' : ''
+              } ${!navVisible ? 'translate-x-0' : 'translate-x-[-100px]'}`}
           >
             <ModelSelector startupConfig={startupConfig} />
-            {interfaceConfig.presets === true && interfaceConfig.modelSelect && <PresetsMenu />}
+            {/* {interfaceConfig.presets === true && interfaceConfig.modelSelect && <PresetsMenu />} */}
             {hasAccessToBookmarks === true && <BookmarkMenu />}
-            {hasAccessToMultiConvo === true && <AddMultiConvo />}
+            {/* {hasAccessToMultiConvo === true && <AddMultiConvo />} */}
             {isSmallScreen && (
               <>
                 <ExportAndShareMenu
                   isSharedButtonEnabled={startupConfig?.sharedLinksEnabled ?? false}
                 />
-                <TemporaryChat />
+                {/* <TemporaryChat /> */}
               </>
             )}
           </div>
@@ -73,7 +70,7 @@ export default function Header() {
             <ExportAndShareMenu
               isSharedButtonEnabled={startupConfig?.sharedLinksEnabled ?? false}
             />
-            <TemporaryChat />
+            {/* <TemporaryChat /> */}
           </div>
         )}
       </div>

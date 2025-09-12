@@ -14,6 +14,9 @@ import RenameForm from './RenameForm';
 import ConvoLink from './ConvoLink';
 import { cn } from '~/utils';
 import store from '~/store';
+import { modeState, Mode } from '~/store/mode';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+
 
 interface ConversationProps {
   conversation: TConversation;
@@ -44,6 +47,8 @@ export default function Conversation({
   const [isPopoverActive, setIsPopoverActive] = useState(false);
 
   const previousTitle = useRef(title);
+  const setMode = useSetRecoilState(modeState);
+
 
   useEffect(() => {
     if (title !== previousTitle.current) {
@@ -100,6 +105,9 @@ export default function Conversation({
   };
 
   const handleNavigation = (ctrlOrMetaKey: boolean) => {
+
+    console.log('conversation1234');
+    console.log(conversation);
     if (ctrlOrMetaKey) {
       toggleNav();
       const baseUrl = window.location.origin;
@@ -116,6 +124,18 @@ export default function Conversation({
 
     if (typeof title === 'string' && title.length > 0) {
       document.title = title;
+    }
+
+    const spec = conversation?.spec;
+
+    if (spec === 'help-others') {
+      setMode('student');
+    } else if (spec === 'help-myself') {
+      setMode('classroom');
+    } else if (spec === 'application-help') {
+      setMode('start');
+    } else {
+      setMode('student');
     }
 
     navigateToConvo(conversation, {

@@ -90,6 +90,9 @@ export default function DataTable<TData, TValue>({ columns, data }: DataTablePro
     },
   });
 
+  console.log('here1234');
+  console.log(table);
+
   return (
     <div className="flex h-full flex-col gap-4">
       <div className="flex flex-wrap items-center gap-2 py-2 sm:gap-4 sm:py-4">
@@ -228,9 +231,8 @@ export default function DataTable<TData, TValue>({ columns, data }: DataTablePro
             })}
           </span>
           <span className="sm:hidden">
-            {`${table.getFilteredSelectedRowModel().rows.length}/${
-              table.getFilteredRowModel().rows.length
-            }`}
+            {`${table.getFilteredSelectedRowModel().rows.length}/${table.getFilteredRowModel().rows.length
+              }`}
           </span>
         </div>
         <div className="flex items-center space-x-1 pr-2 text-xs font-bold text-text-primary sm:text-sm">
