@@ -192,6 +192,23 @@ function StudentDetailsFormButton({
   //   [setIsDialogOpen],
   // );
 
+  const handleChange = () => {
+    console.log('Opening Student Help Dialog');
+    const spec = findSpecByName(modelSpecs, 'help-others');
+    if (!spec) return;
+    console.log('setting mode to:', mode);
+    setMode(mode);
+
+    queryClient.setQueryData<TMessage[]>(
+      [QueryKeys.messages, conversation?.conversationId ?? Constants.NEW_CONVO],
+      [],
+    );
+    queryClient.invalidateQueries({ queryKey: [QueryKeys.messages] });
+    navigate('/c/new', { state: { focusChat: true } });
+
+    handleSelectSpec(spec);
+  };
+
   const performRenameConversation = async (newTitle: string, conversationId: string) => {
     try {
       await updateConvoMutation.mutateAsync({
@@ -273,7 +290,7 @@ function StudentDetailsFormButton({
     <>
       <Button
         variant={currentMode === 'student' ? 'outline' : 'secondary'}
-        onClick={openDialog}
+        onClick={handleChange}
         aria-label="Open student help dialog"
         className={`flex w-full items-center justify-start gap-3 rounded-lg py-3 pl-[15%] pr-[30%] text-left hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring ${className ?? ''} ${buttonClassName || ''}`}
       >

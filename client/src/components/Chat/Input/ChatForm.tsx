@@ -367,14 +367,14 @@ const ChatForm = memo(({ index = 0 }: { index?: number }) => {
                   <div className={`${isRTL ? 'mr-2' : 'ml-2'}`}>
                     <AttachFileChat disableInputs={disableInputs} />
                   </div>
-                  <div className={`${isRTL ? 'mr-2' : 'ml-2'}`}>
+                  {/* <div className={`${isRTL ? 'mr-2' : 'ml-2'}`}>
                     <XButton
                       className="hidden sm:flex"
                       conversationId={conversationId}
                       setMode={store.setMode}
                       mode={mode}
                     />
-                  </div>
+                  </div> */}
                   {/* {mode === 'student' && (
                     <div className={`${isRTL ? 'mr-2' : 'ml-2'}`}>
                       <ModelSelectorProvider startupConfig={startupConfig}>
