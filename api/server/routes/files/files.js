@@ -191,7 +191,8 @@ router.get('/code/download/:session_id/:fileId', async (req, res) => {
 router.get('/download/:userId/:file_id', async (req, res) => {
   try {
     const { userId, file_id } = req.params;
-    logger.debug(`File download requested by user ${userId}: ${file_id}`);
+    const errorPrefix = `File download requested by user ${userId}`;
+    logger.debug(`${errorPrefix}: ${file_id}`);
 
     if (userId !== req.user.id) {
       logger.warn(`${errorPrefix} forbidden: ${file_id}`);
@@ -199,7 +200,6 @@ router.get('/download/:userId/:file_id', async (req, res) => {
     }
 
     const [file] = await getFiles({ file_id });
-    const errorPrefix = `File download requested by user ${userId}`;
 
     if (!file) {
       logger.warn(`${errorPrefix} not found: ${file_id}`);
@@ -228,12 +228,8 @@ router.get('/download/:userId/:file_id', async (req, res) => {
       res.setHeader('X-File-Metadata', JSON.stringify(file));
     };
 
-    /** @type {{ body: import('stream').PassThrough } | undefined} */
-    let passThrough;
-    /** @type {ReadableStream | undefined} */
-    let fileStream;
-
     if (checkOpenAIStorage(file.source)) {
+      // OpenAI / Azure Assistants branch
       req.body = { model: file.model };
       const endpointMap = {
         [FileSources.openai]: EModelEndpoint.assistants,
@@ -244,16 +240,22 @@ router.get('/download/:userId/:file_id', async (req, res) => {
         res,
         overrideEndpoint: endpointMap[file.source],
       });
+
       logger.debug(`Downloading file ${file_id} from OpenAI`);
-      passThrough = await getDownloadStream(file_id, openai);
+      const upstream = await getDownloadStream(file_id, openai); // may be a Response-like or a stream
+      const stream =
+        upstream?.body && typeof upstream.body.pipe === 'function' ? upstream.body : upstream;
+
       setHeaders();
+      stream.pipe(res);
       logger.debug(`File ${file_id} downloaded from OpenAI`);
-      passThrough.body.pipe(res);
-    } else {
-      fileStream = getDownloadStream(file_id);
-      setHeaders();
-      fileStream.pipe(res);
+      return;
     }
+
+    // Local/S3/Azure Blob/etc. branch
+    const fileStream = getDownloadStream(file_id);
+    setHeaders();
+    fileStream.pipe(res);
   } catch (error) {
     logger.error('Error downloading file:', error);
     res.status(500).send('Error downloading file');

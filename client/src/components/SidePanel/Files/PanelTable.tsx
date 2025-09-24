@@ -19,6 +19,7 @@ import {
   mergeFileConfig,
   megabyte,
   isAssistantsEndpoint,
+  request,
   type TFile,
 } from 'librechat-data-provider';
 
@@ -37,6 +38,9 @@ import { useLocalize, useUpdateFiles } from '~/hooks';
 import { useGetFileConfig } from '~/data-provider';
 import store from '~/store';
 
+import { useDownloadFilesFromTable } from '~/hooks/Files';
+import { useRecoilValue } from 'recoil';
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -49,6 +53,25 @@ export default function DataTable<TData, TValue>({ columns, data }: DataTablePro
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [{ pageIndex, pageSize }, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
   const setShowFiles = useSetRecoilState(store.showFiles);
+  const currentUser = useRecoilValue(store.user);
+  const uid = currentUser?.id || currentUser?._id;
+
+  const { isDownloading, downloadFiles } = useDownloadFilesFromTable({
+    resolveUrl: (f) => {
+      const owner = (f as any).user ?? uid;
+      if (!owner) throw new Error('User not loaded');
+      return `/api/files/download/${encodeURIComponent(owner)}/${encodeURIComponent(f.file_id)}`;
+    },
+    fetcher: async (url) => {
+      const res: any = await request.getResponse(url, {
+        responseType: 'blob',
+        withCredentials: true,
+      } as any);
+      const headers = new Headers();
+      Object.entries(res.headers || {}).forEach(([k, v]) => headers.set(String(k), String(v)));
+      return { blob: res.data as Blob, headers };
+    },
+  });
 
   const pagination = useMemo(
     () => ({
@@ -93,77 +116,84 @@ export default function DataTable<TData, TValue>({ columns, data }: DataTablePro
 
   const handleFileClick = useCallback(
     (file: TFile) => {
-      if (!fileMap?.[file.file_id] || !conversation?.endpoint) {
-        showToast({
-          message: localize('com_ui_attach_error'),
-          status: 'error',
-        });
-        return;
-      }
-
-      const fileData = fileMap[file.file_id];
-      const endpoint = conversation.endpoint;
-
-      if (!fileData.source) {
-        return;
-      }
-
-      const isOpenAIStorage = checkOpenAIStorage(fileData.source);
-      const isAssistants = isAssistantsEndpoint(endpoint);
-
-      if (isOpenAIStorage && !isAssistants) {
-        showToast({
-          message: localize('com_ui_attach_error_openai'),
-          status: 'error',
-        });
-        return;
-      }
-
-      if (!isOpenAIStorage && isAssistants) {
-        showToast({
-          message: localize('com_ui_attach_warn_endpoint'),
-          status: 'warning',
-        });
-      }
-
-      const { fileSizeLimit, supportedMimeTypes } =
-        fileConfig.endpoints[endpoint] ?? fileConfig.endpoints.default;
-
-      if (fileData.bytes > fileSizeLimit) {
-        showToast({
-          message: `${localize('com_ui_attach_error_size')} ${
-            fileSizeLimit / megabyte
-          } MB (${endpoint})`,
-          status: 'error',
-        });
-        return;
-      }
-
-      if (!defaultFileConfig.checkType(file.type, supportedMimeTypes)) {
-        showToast({
-          message: `${localize('com_ui_attach_error_type')} ${file.type} (${endpoint})`,
-          status: 'error',
-        });
-        return;
-      }
-
-      addFile({
-        progress: 1,
-        attached: true,
-        file_id: fileData.file_id,
-        filepath: fileData.filepath,
-        preview: fileData.filepath,
-        type: fileData.type,
-        height: fileData.height,
-        width: fileData.width,
-        filename: fileData.filename,
-        source: fileData.source,
-        size: fileData.bytes,
-        metadata: fileData.metadata,
-      });
+      if (!file) return;
+      downloadFiles([file]); // ← use your download hook
     },
-    [addFile, fileMap, conversation, localize, showToast, fileConfig.endpoints],
+    [downloadFiles],
   );
+
+  // const handleFileClick = useCallback(
+  //   (file: TFile) => {
+  //     if (!fileMap?.[file.file_id] || !conversation?.endpoint) {
+  //       showToast({
+  //         message: localize('com_ui_attach_error'),
+  //         status: 'error',
+  //       });
+  //       return;
+  //     }
+
+  //     const fileData = fileMap[file.file_id];
+  //     const endpoint = conversation.endpoint;
+
+  //     if (!fileData.source) {
+  //       return;
+  //     }
+
+  //     const isOpenAIStorage = checkOpenAIStorage(fileData.source);
+  //     const isAssistants = isAssistantsEndpoint(endpoint);
+
+  //     if (isOpenAIStorage && !isAssistants) {
+  //       showToast({
+  //         message: localize('com_ui_attach_error_openai'),
+  //         status: 'error',
+  //       });
+  //       return;
+  //     }
+
+  //     if (!isOpenAIStorage && isAssistants) {
+  //       showToast({
+  //         message: localize('com_ui_attach_warn_endpoint'),
+  //         status: 'warning',
+  //       });
+  //     }
+
+  //     const { fileSizeLimit, supportedMimeTypes } =
+  //       fileConfig.endpoints[endpoint] ?? fileConfig.endpoints.default;
+
+  //     if (fileData.bytes > fileSizeLimit) {
+  //       showToast({
+  //         message: `${localize('com_ui_attach_error_size')} ${fileSizeLimit / megabyte
+  //           } MB (${endpoint})`,
+  //         status: 'error',
+  //       });
+  //       return;
+  //     }
+
+  //     if (!defaultFileConfig.checkType(file.type, supportedMimeTypes)) {
+  //       showToast({
+  //         message: `${localize('com_ui_attach_error_type')} ${file.type} (${endpoint})`,
+  //         status: 'error',
+  //       });
+  //       return;
+  //     }
+
+  //     addFile({
+  //       progress: 1,
+  //       attached: true,
+  //       file_id: fileData.file_id,
+  //       filepath: fileData.filepath,
+  //       preview: fileData.filepath,
+  //       type: fileData.type,
+  //       height: fileData.height,
+  //       width: fileData.width,
+  //       filename: fileData.filename,
+  //       source: fileData.source,
+  //       size: fileData.bytes,
+  //       metadata: fileData.metadata,
+  //     });
+  //   },
+  //   [addFile, fileMap, conversation, localize, showToast, fileConfig.endpoints],
+  // );
 
   const filenameFilter = table.getColumn('filename')?.getFilterValue() as string;
 
@@ -221,6 +251,7 @@ export default function DataTable<TData, TValue>({ columns, data }: DataTablePro
                             whiteSpace: 'nowrap',
                           }}
                           data-skip-refocus="true"
+                          className={isFilenameCell ? "cursor-pointer hover:underline" : undefined}
                           key={cell.id}
                           role={isFilenameCell ? 'button' : undefined}
                           tabIndex={isFilenameCell ? 0 : undefined}

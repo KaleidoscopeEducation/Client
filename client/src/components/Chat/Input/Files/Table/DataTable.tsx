@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ListFilter } from 'lucide-react';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import {
   flexRender,
   getCoreRowModel,
@@ -15,7 +15,7 @@ import type {
   VisibilityState,
   ColumnFiltersState,
 } from '@tanstack/react-table';
-import { FileContext } from 'librechat-data-provider';
+import { FileContext, request } from 'librechat-data-provider';
 import type { AugmentedColumnDef } from '~/common';
 import type { TFile } from 'librechat-data-provider';
 import {
@@ -34,15 +34,19 @@ import {
 } from '~/components/ui';
 import { useDeleteFilesFromTable } from '~/hooks/Files';
 import { TrashIcon, Spinner } from '~/components/svg';
+import { FileDown } from 'lucide-react';
 import useLocalize from '~/hooks/useLocalize';
 import { useMediaQuery } from '~/hooks';
 import { cn } from '~/utils';
 import store from '~/store';
+import { useDownloadFilesFromTable } from '~/hooks/Files';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
+
+
 
 const contextMap = {
   [FileContext.filename]: 'com_ui_name',
@@ -60,8 +64,31 @@ type Style = {
 };
 
 export default function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+  console.log(store);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const currentUser = useRecoilValue(store.user);
+  // console.log('USER', JSON.stringify(currentUser));
+  // debugger;
+
   const localize = useLocalize();
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const { isDownloading, downloadFiles } = useDownloadFilesFromTable({
+    onDone: () => setRowSelection({}),
+    resolveUrl: (f) =>
+      `/api/files/download/${encodeURIComponent(currentUser.id)}/${encodeURIComponent((f as any).file_id)}`,
+    fetcher: async (url) => {
+      // use getResponse so we can read headers (filename) + blob
+      const res: any = await request.getResponse(url, {
+        responseType: 'blob',
+        withCredentials: true,
+      } as any);
+
+      const headers = new Headers();
+      Object.entries(res.headers || {}).forEach(([k, v]) => headers.set(String(k), String(v)));
+      return { blob: res.data as Blob, headers };
+    },
+  });
   const setFiles = useSetRecoilState(store.filesByIndex(0));
   const { deleteFiles } = useDeleteFilesFromTable(() => setIsDeleting(false));
 
@@ -70,6 +97,13 @@ export default function DataTable<TData, TValue>({ columns, data }: DataTablePro
   const isSmallScreen = useMediaQuery('(max-width: 768px)');
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+
+  const handleDownloadSelected = () => {
+    const filesToDownload = table
+      .getFilteredSelectedRowModel()
+      .rows.map((row) => row.original as TFile);
+    downloadFiles(filesToDownload);
+  };
 
   const table = useReactTable({
     data,
@@ -115,6 +149,19 @@ export default function DataTable<TData, TValue>({ columns, data }: DataTablePro
             <TrashIcon className="size-3.5 text-red-400 sm:size-4" />
           )}
           {!isSmallScreen && <span className="ml-2">{localize('com_ui_delete')}</span>}
+        </Button>
+        <Button
+          variant="outline"
+          onClick={handleDownloadSelected}
+          disabled={!table.getFilteredSelectedRowModel().rows.length || isDownloading}
+          className={cn('min-w-[40px] transition-all duration-200', isSmallScreen && 'px-2 py-1')}
+        >
+          {isDownloading ? (
+            <Spinner className="size-3.5 sm:size-4" />
+          ) : (
+            <FileDown className="size-3.5 text-green-400 sm:size-4" />
+          )}
+          {!isSmallScreen && <span className="ml-2">{"Download"}</span>}
         </Button>
         <Input
           placeholder={localize('com_files_filter')}
