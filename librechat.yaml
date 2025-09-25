@@ -390,7 +390,8 @@ modelSpecs:
       default: true
       preset:
         endpoint: "assistants"
-        assistant_id: "asst_TyABQRLQpfCg4N3rj7RaXqCp"
+        # assistant_id: "asst_TyABQRLQpfCg4N3rj7RaXqCp"
+        assistant_id: "asst_mvyg3Ps8nb4aWaFCv2GMMk9d"
         model: "gpt-4o"
     - name: "TEST-help-others"
       label: "TEST-Help Others"
