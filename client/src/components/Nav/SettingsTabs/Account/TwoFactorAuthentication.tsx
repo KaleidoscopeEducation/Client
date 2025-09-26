@@ -198,11 +198,11 @@ const TwoFactorAuthentication: React.FC = () => {
         }
       }}
     >
-      <DisableTwoFactorToggle
+      {/* <DisableTwoFactorToggle
         enabled={!!user?.twoFactorEnabled}
         onChange={() => setDialogOpen(true)}
         disabled={isVerifying || isDisabling || isGenerating}
-      />
+      /> */}
 
       <OGDialogContent className="w-11/12 max-w-lg p-6">
         <AnimatePresence mode="wait">

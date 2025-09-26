@@ -8,13 +8,13 @@ import { Dropdown } from '~/components';
 import store from '~/store';
 
 const toggleSwitchConfigs = [
-  {
-    stateAtom: store.enableUserMsgMarkdown,
-    localizationKey: 'com_nav_user_msg_markdown',
-    switchId: 'enableUserMsgMarkdown',
-    hoverCardText: undefined,
-    key: 'enableUserMsgMarkdown',
-  },
+  // {
+  //   stateAtom: store.enableUserMsgMarkdown,
+  //   localizationKey: 'com_nav_user_msg_markdown',
+  //   switchId: 'enableUserMsgMarkdown',
+  //   hoverCardText: undefined,
+  //   key: 'enableUserMsgMarkdown',
+  // },
   {
     stateAtom: store.autoScroll,
     localizationKey: 'com_nav_auto_scroll',

@@ -55,51 +55,51 @@ export default function Settings({ open, onOpenChange }: TDialogProps) {
     icon: React.JSX.Element;
     label: TranslationKeys;
   }[] = [
-    {
-      value: SettingsTabValues.GENERAL,
-      icon: <GearIcon />,
-      label: 'com_nav_setting_general',
-    },
-    {
-      value: SettingsTabValues.CHAT,
-      icon: <MessageSquare className="icon-sm" />,
-      label: 'com_nav_setting_chat',
-    },
-    {
-      value: SettingsTabValues.BETA,
-      icon: <ExperimentIcon />,
-      label: 'com_nav_setting_beta',
-    },
-    {
-      value: SettingsTabValues.COMMANDS,
-      icon: <Command className="icon-sm" />,
-      label: 'com_nav_commands',
-    },
-    {
-      value: SettingsTabValues.SPEECH,
-      icon: <SpeechIcon className="icon-sm" />,
-      label: 'com_nav_setting_speech',
-    },
-    {
-      value: SettingsTabValues.DATA,
-      icon: <DataIcon />,
-      label: 'com_nav_setting_data',
-    },
-    ...(startupConfig?.balance?.enabled
-      ? [
-        {
-          value: SettingsTabValues.BALANCE,
+      {
+        value: SettingsTabValues.GENERAL,
+        icon: <GearIcon />,
+        label: 'com_nav_setting_general',
+      },
+      {
+        value: SettingsTabValues.CHAT,
+        icon: <MessageSquare className="icon-sm" />,
+        label: 'com_nav_setting_chat',
+      },
+      // {
+      //   value: SettingsTabValues.BETA,
+      //   icon: <ExperimentIcon />,
+      //   label: 'com_nav_setting_beta',
+      // },
+      {
+        value: SettingsTabValues.COMMANDS,
+        icon: <Command className="icon-sm" />,
+        label: 'com_nav_commands',
+      },
+      {
+        value: SettingsTabValues.SPEECH,
+        icon: <SpeechIcon className="icon-sm" />,
+        label: 'com_nav_setting_speech',
+      },
+      // {
+      //   value: SettingsTabValues.DATA,
+      //   icon: <DataIcon />,
+      //   label: 'com_nav_setting_data',
+      // },
+      ...(startupConfig?.balance?.enabled
+        ? [
+          {
+            value: SettingsTabValues.BALANCE,
             icon: <DollarSign size={18} />,
-          label: 'com_nav_setting_balance' as TranslationKeys,
-        },
+            label: 'com_nav_setting_balance' as TranslationKeys,
+          },
         ]
-      : ([] as { value: SettingsTabValues; icon: React.JSX.Element; label: TranslationKeys }[])),
-    {
-      value: SettingsTabValues.ACCOUNT,
-      icon: <UserIcon />,
-      label: 'com_nav_setting_account',
-    },
-  ];
+        : ([] as { value: SettingsTabValues; icon: React.JSX.Element; label: TranslationKeys }[])),
+      {
+        value: SettingsTabValues.ACCOUNT,
+        icon: <UserIcon />,
+        label: 'com_nav_setting_account',
+      },
+    ];
 
   const handleTabChange = (value: string) => {
     setActiveTab(value as SettingsTabValues);
