@@ -14,6 +14,7 @@ env:
   RG_CORE:   main-container-repo
   BICEP_FILE: infra/main.bicep
   APP_IMAGE: libreclient
+  NODE_ENV: production
 
 jobs:
   build-and-deploy:

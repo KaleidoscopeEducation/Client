@@ -165,7 +165,7 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
   const studentGreeting = 'Student & Classroom Support';
 
   const helpOthersSubheader =
-    'You’re not alone here. Let’s gather some information to get the process going..';
+    'You’re not alone here. Let’s gather some information to get the process going 🙂';
   const helpOthersBulletPoints = [
     'Name',
     'Age or Grade Level',
