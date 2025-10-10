@@ -96,6 +96,16 @@ resource env 'Microsoft.App/managedEnvironments@2025-01-01' = {
   }
 }
 
+resource cert 'Microsoft.App/managedEnvironments/managedCertificates@2025-07-01' = {
+  name: 'libreclient-managed-cert'
+  parent: env
+  location: location
+  properties: {
+    subjectName: 'chat.kaleidoscopeai.net' // your domain
+    domainControlValidation: 'CNAME' // or 'TXT' per your DNS setup
+  }
+}
+
 // ========== LibreChat Container App ==========
 resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
   name: 'libreclient'
@@ -105,11 +115,18 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
   }
   properties: {
     managedEnvironmentId: env.id
-
     configuration: {
       ingress: {
         external: true
         targetPort: 3080
+        allowInsecure: false
+        customDomains: [
+          {
+            name: 'chat.kaleidoscopeai.net'
+            bindingType: 'SniEnabled'
+            certificateId: cert.id
+          }
+        ]
       }
       registries: [
         {
@@ -180,7 +197,7 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
       ]
       scale: {
         minReplicas: 1
-        maxReplicas: 3
+        maxReplicas: 4
         rules: [
           {
             name: 'http-load'
