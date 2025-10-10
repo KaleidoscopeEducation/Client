@@ -64,7 +64,7 @@ jobs:
           "jwtRefreshSecret":  { "value": "${{ secrets.JWT_REFRESH_SECRET }}" },
           "smtpUser":     { "value": "${{ secrets.EMAIL_USERNAME }}" },
           "smtpPass":     { "value": "${{ secrets.EMAIL_PASSWORD }}" },
-          "assistantsApiKey": { "value": "${{ secrets.ASSISTANTS_API_KEY }}" }
+          "assistantsApiKey": { "value": "${{ secrets.ASSISTANTS_API_KEY }}" },
           "customDomain": { "value": "chat.kaleidoscopeai.net" },
           "existingManagedCertName": { "value": "chat.kaleidoscopeai.net-env-libr-251010184654" }
         }
