@@ -84,11 +84,6 @@ resource logWs 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
   }
 }
 
-resource existingManagedCert 'Microsoft.App/managedEnvironments/managedCertificates@2024-02-02' existing = {
-  name: existingManagedCertName
-  parent: env
-}
-
 // ========== ACA Managed Environment ==========
 resource env 'Microsoft.App/managedEnvironments@2025-01-01' = {
   name: acaEnvName
@@ -107,14 +102,19 @@ resource env 'Microsoft.App/managedEnvironments@2025-01-01' = {
   }
 }
 
-resource cert 'Microsoft.App/managedEnvironments/managedCertificates@2025-07-01' = {
-  name: 'libreclient-managed-cert'
+// resource cert 'Microsoft.App/managedEnvironments/managedCertificates@2025-07-01' = {
+//   name: 'libreclient-managed-cert'
+//   parent: env
+//   location: location
+//   properties: {
+//     subjectName: 'chat.kaleidoscopeai.net' // your domain
+//     domainControlValidation: 'CNAME' // or 'TXT' per your DNS setup
+//   }
+// }
+
+resource existingManagedCert 'Microsoft.App/managedEnvironments/managedCertificates@2024-02-02' existing = {
+  name: existingManagedCertName
   parent: env
-  location: location
-  properties: {
-    subjectName: 'chat.kaleidoscopeai.net' // your domain
-    domainControlValidation: 'CNAME' // or 'TXT' per your DNS setup
-  }
 }
 
 // ========== LibreChat Container App ==========
@@ -202,7 +202,7 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
             { name: 'APP_TITLE', value: 'Kaleidoscope' }
             { name: 'CUSTOM_FOOTER', value: 'Kaleidoscope 2025' }
             { name: 'HELP_AND_FAQ_URL', value: 'https://app.kaleidoscopeai.net/?stay=yes' }
-            { name: 'DOMAIN_CLIENT', value: 'https://libreclient.bluedune-a4438afc.eastus.azurecontainerapps.io' }
+            { name: 'DOMAIN_CLIENT', value: 'https://${customDomain}' }
           ]
         }
       ]
