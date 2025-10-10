@@ -19,88 +19,86 @@ interface:
     externalUrl: 'https://librechat.ai/privacy-policy'
     openNewTab: true
 
-# Terms of service
-termsOfService:
-  externalUrl: 'https://librechat.ai/tos'
-  openNewTab: true
-  modalAcceptance: true
-  modalTitle: "Kaleidoscope Terms of Service"
-  modalContent: |
-    *Effective Date: July 6, 2025*
+  # Terms of service
+  termsOfService:
+    externalUrl: 'https://librechat.ai/tos'
+    openNewTab: true
+    modalAcceptance: true
+    modalTitle: "Kaleidoscope Terms of Service"
+    modalContent: |
+      *Effective Date: July 6, 2025*
 
-    Welcome to Kaleidoscope, an AI-powered platform designed to enhance educational experiences and support learning communities. These Terms of Service ("Terms") govern your access to and use of Kaleidoscope's website, applications, and related services (collectively, the "Service"). By creating an account or using the Service, you agree to be bound by these Terms and our Privacy Policy.
+      Welcome to Kaleidoscope, an AI-powered platform designed to enhance educational experiences and support learning communities. These Terms of Service ("Terms") govern your access to and use of Kaleidoscope's website, applications, and related services (collectively, the "Service"). By creating an account or using the Service, you agree to be bound by these Terms and our Privacy Policy.
 
-    ## 1. Acceptance of Terms
+      ## 1. Acceptance of Terms
 
-    By accessing or using Kaleidoscope, you acknowledge that you have read, understood, and agree to be bound by these Terms. If you do not agree to these Terms, you may not access or use the Service.
+      By accessing or using Kaleidoscope, you acknowledge that you have read, understood, and agree to be bound by these Terms. If you do not agree to these Terms, you may not access or use the Service.
 
-    ## 2. Description of Service
-    Kaleidoscope is an educational AI platform that provides:
+      ## 2. Description of Service
+      Kaleidoscope is an educational AI platform that provides:
 
-    a. AI-powered educational guidance
-    b. Document analysis and educational content generation
-    c. Collaborative learning tools and resources
-    d. Educational assessment and feedback systems
-    e. File storage and sharing capabilities for educational materials
+      a. AI-powered educational guidance
+      b. Document analysis and educational content generation
+      c. Collaborative learning tools and resources
+      d. Educational assessment and feedback systems
+      e. File storage and sharing capabilities for educational materials
 
-    ## 3. Eligibility and Account Creation
+      ## 3. Eligibility and Account Creation
 
-    a. You must provide accurate, current, and complete information during registration
-    b. You are responsible for maintaining the confidentiality of your account credentials
-    c. You agree to notify us immediately of any unauthorized access to your account
-    d. One person may not maintain multiple accounts without our express permission
+      a. You must provide accurate, current, and complete information during registration
+      b. You are responsible for maintaining the confidentiality of your account credentials
+      c. You agree to notify us immediately of any unauthorized access to your account
+      d. One person may not maintain multiple accounts without our express permission
 
-    ## 4. Educational & Student Data
+      ## 4. Educational & Student Data
 
-    If you submit or generate any personally identifiable information about students, you represent that you have the necessary consent or authority to do so. Kaleidoscope acts as a data processor with respect to such information and will handle it in accordance with applicable data-protection laws and our Privacy Policy.
+      If you submit or generate any personally identifiable information about students, you represent that you have the necessary consent or authority to do so. Kaleidoscope acts as a data processor with respect to such information and will handle it in accordance with applicable data-protection laws and our Privacy Policy.
 
-    ## 5. Non-Personal Data & Cookies
+      ## 5. Non-Personal Data & Cookies
 
-    We use cookies, device identifiers, and similar technologies to analyze usage, remember preferences, and improve performance. By using the Service, you consent to our use of these technologies as outlined in the Privacy Policy.
+      We use cookies, device identifiers, and similar technologies to analyze usage, remember preferences, and improve performance. By using the Service, you consent to our use of these technologies as outlined in the Privacy Policy.
 
-    ## 6. Acceptable Use
+      ## 6. Acceptable Use
 
-    You agree **not** to:  
-    * Violate any applicable law or regulation;  
-    * Upload or share content that is harassing, defamatory, obscene, or otherwise objectionable;  
-    * Attempt to reverse-engineer, probe, or disrupt our systems or security measures;  
-    * Use the Service to generate materials that facilitate academic dishonesty or violate institutional policies;  
-    * Misrepresent your affiliation with any person or entity.  
+      You agree **not** to:  
+      * Violate any applicable law or regulation;  
+      * Upload or share content that is harassing, defamatory, obscene, or otherwise objectionable;  
+      * Attempt to reverse-engineer, probe, or disrupt our systems or security measures;  
+      * Use the Service to generate materials that facilitate academic dishonesty or violate institutional policies;  
+      * Misrepresent your affiliation with any person or entity.  
 
-    We reserve the right to suspend or terminate accounts that violate these Terms.
+      We reserve the right to suspend or terminate accounts that violate these Terms.
 
-    ## 7. AI-Generated Content Disclaimer
+      ## 7. AI-Generated Content Disclaimer
 
-    Kaleidoscope uses large-language-model technology. AI-generated outputs may occasionally contain inaccuracies or bias. You are solely responsible for reviewing, editing, and verifying the suitability of any materials produced by the Service before distributing them to students or third parties.
+      Kaleidoscope uses large-language-model technology. AI-generated outputs may occasionally contain inaccuracies or bias. You are solely responsible for reviewing, editing, and verifying the suitability of any materials produced by the Service before distributing them to students or third parties.
 
-    ## 8. Payment & Renewal
+      ## 8. Payment & Renewal
 
-    Subscription fees, billing cycles, and renewal terms (including free-trial periods) are detailed at checkout. Unless you cancel before the end of a billing period, subscriptions renew automatically at the then-current rate. All fees are non-refundable except as required by law.
+      Subscription fees, billing cycles, and renewal terms (including free-trial periods) are detailed at checkout. Unless you cancel before the end of a billing period, subscriptions renew automatically at the then-current rate. All fees are non-refundable except as required by law.
 
-    ## 9. Termination
+      ## 9. Termination
 
-    You may stop using the Service at any time. We may terminate or suspend your access immediately if you breach these Terms, create risk or legal exposure for us, or as required by law. Sections that by their nature should survive termination (e.g., Ownership, Disclaimers, Limitation of Liability, Governing Law) will continue to apply.
+      You may stop using the Service at any time. We may terminate or suspend your access immediately if you breach these Terms, create risk or legal exposure for us, or as required by law. Sections that by their nature should survive termination (e.g., Ownership, Disclaimers, Limitation of Liability, Governing Law) will continue to apply.
 
-    ## 10. Disclaimers & Limitation of Liability
+      ## 10. Disclaimers & Limitation of Liability
 
-    The Service is provided **“as is”** without warranties of any kind, express or implied. To the fullest extent permitted by law, Kaleidoscope disclaims all warranties, including implied warranties of merchantability, fitness for a particular purpose, and non-infringement.  
-    To the extent permitted by law, Kaleidoscope’s total liability for any claims under these Terms is limited to the amount you paid us in the 12 months preceding the claim. We are not liable for indirect, special, incidental, consequential, or punitive damages.
+      The Service is provided **“as is”** without warranties of any kind, express or implied. To the fullest extent permitted by law, Kaleidoscope disclaims all warranties, including implied warranties of merchantability, fitness for a particular purpose, and non-infringement.  
+      To the extent permitted by law, Kaleidoscope’s total liability for any claims under these Terms is limited to the amount you paid us in the 12 months preceding the claim. We are not liable for indirect, special, incidental, consequential, or punitive damages.
 
-    ## 11. Governing Law
+      ## 11. Governing Law
 
-    These Terms are governed by and construed in accordance with the laws of the State of Delaware, USA, without regard to its conflict-of-law provisions. If you are located outside the United States, you are responsible for compliance with local laws.
+      These Terms are governed by and construed in accordance with the laws of the State of Delaware, USA, without regard to its conflict-of-law provisions. If you are located outside the United States, you are responsible for compliance with local laws.
 
-    ## 12. Changes to the Terms
+      ## 12. Changes to the Terms
 
-    We may update these Terms from time to time. Material changes will be announced via email or prominent notice in the app at least 14 days before they take effect. Your continued use of the Service after the effective date of an update constitutes acceptance of the revised Terms.
+      We may update these Terms from time to time. Material changes will be announced via email or prominent notice in the app at least 14 days before they take effect. Your continued use of the Service after the effective date of an update constitutes acceptance of the revised Terms.
 
-    ## 13. Contact Information
+      ## 13. Contact Information
 
-    If you have any questions about these Terms, please contact us at support@kaleidoscopeai.net
+      If you have any questions about these Terms, please contact us at support@kaleidoscopeai.net
 
-    By using the Service, you acknowledge that you have read these Terms of Service and agree to be bound by them.
-
-
+      By using the Service, you acknowledge that you have read these Terms of Service and agree to be bound by them.
   endpointsMenu: false
   modelSelect: false
   parameters: true
