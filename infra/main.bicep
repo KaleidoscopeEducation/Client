@@ -10,6 +10,12 @@ param location string = resourceGroup().location
 // param acrName string                              // e.g. "kaleidoscopeaieducation-ajfgb4ceepedbyc5"
 param acrName string = 'kaleidoscopeaieducation'
 
+@description('Custom hostname for the app')
+param customDomain string = 'chat.kaleidoscopeai.net'
+
+@description('Name of the existing managed certificate resource in this environment')
+param existingManagedCertName string // e.g. "chat.kaleidoscopeai.net-env-libr-251010184654"
+
 @description('Repository part of the image, e.g. "<acr>.azurecr.io/libreclient"')
 param imageRepo string
 
@@ -78,6 +84,11 @@ resource logWs 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
   }
 }
 
+resource existingManagedCert 'Microsoft.App/managedEnvironments/managedCertificates@2024-02-02' existing = {
+  name: existingManagedCertName
+  parent: env
+}
+
 // ========== ACA Managed Environment ==========
 resource env 'Microsoft.App/managedEnvironments@2025-01-01' = {
   name: acaEnvName
@@ -122,9 +133,9 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
         allowInsecure: false
         customDomains: [
           {
-            name: 'chat.kaleidoscopeai.net'
+            name: customDomain
             bindingType: 'SniEnabled'
-            certificateId: cert.id
+            certificateId: existingManagedCert.id
           }
         ]
       }
