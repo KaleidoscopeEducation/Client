@@ -99,9 +99,11 @@ function ModelSelectorContent() {
 }
 
 export default function ModelSelector({ startupConfig }: ModelSelectorProps) {
+  const isDevMode = import.meta.env.VITE_DEV_MODE === 'true';
+
   return (
     <ModelSelectorProvider startupConfig={startupConfig}>
-      <ModelSelectorContent />
+      {isDevMode && <ModelSelectorContent />}
     </ModelSelectorProvider>
   );
 }

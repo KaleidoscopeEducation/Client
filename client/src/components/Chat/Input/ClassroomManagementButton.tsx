@@ -124,6 +124,7 @@ function ClassroomManagementButton({
         variant={currentMode === 'classroom' ? 'outline' : 'secondary'}
         onClick={handleChange}
         aria-label="Generate Files"
+        disabled={true}
       >
         <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center">
           <MessageCircleQuestion
@@ -133,7 +134,7 @@ function ClassroomManagementButton({
           ></MessageCircleQuestion>
         </span>
         <div className="ml-4 flex flex-col leading-snug">
-          <span className="text-sm font-medium">{label}</span>
+          <span className="text-sm font-medium">{`${label} (Coming Soon!)`}</span>
           <span className={`text-xs text-muted-foreground ${descriptionClassName || ''}`}>
             {description}
           </span>

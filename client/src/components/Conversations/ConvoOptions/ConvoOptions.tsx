@@ -144,34 +144,34 @@ function ConvoOptions({
         onClick: renameHandler,
         icon: <Pen className="icon-sm mr-2 text-text-primary" />,
       },
-      {
-        label: localize('com_ui_duplicate'),
-        onClick: handleDuplicateClick,
-        hideOnClick: false,
-        icon: isDuplicateLoading ? (
-          <Spinner className="size-4" />
-        ) : (
-          <Copy className="icon-sm mr-2 text-text-primary" />
-        ),
-      },
-      {
-        label: localize('com_ui_archive'),
-        onClick: handleArchiveClick,
-        hideOnClick: false,
-        icon: isArchiveLoading ? (
-          <Spinner className="size-4" />
-        ) : (
-          <Archive className="icon-sm mr-2 text-text-primary" />
-        ),
-      },
-      {
-        label: localize('com_ui_delete'),
-        onClick: handleDeleteClick,
-        icon: <Trash className="icon-sm mr-2 text-text-primary" />,
-        hideOnClick: false,
-        ref: deleteButtonRef,
-        render: (props) => <button {...props} />,
-      },
+      // {
+      //   label: localize('com_ui_duplicate'),
+      //   onClick: handleDuplicateClick,
+      //   hideOnClick: false,
+      //   icon: isDuplicateLoading ? (
+      //     <Spinner className="size-4" />
+      //   ) : (
+      //     <Copy className="icon-sm mr-2 text-text-primary" />
+      //   ),
+      // },
+      // {
+      //   label: localize('com_ui_archive'),
+      //   onClick: handleArchiveClick,
+      //   hideOnClick: false,
+      //   icon: isArchiveLoading ? (
+      //     <Spinner className="size-4" />
+      //   ) : (
+      //     <Archive className="icon-sm mr-2 text-text-primary" />
+      //   ),
+      // },
+      // {
+      //   label: localize('com_ui_delete'),
+      //   onClick: handleDeleteClick,
+      //   icon: <Trash className="icon-sm mr-2 text-text-primary" />,
+      //   hideOnClick: false,
+      //   ref: deleteButtonRef,
+      //   render: (props) => <button {...props} />,
+      // },
     ],
     [
       localize,

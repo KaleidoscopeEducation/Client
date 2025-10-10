@@ -64,11 +64,9 @@ type Style = {
 };
 
 export default function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
-  console.log(store);
   // eslint-disable-next-line react-hooks/rules-of-hooks
+
   const currentUser = useRecoilValue(store.user);
-  // console.log('USER', JSON.stringify(currentUser));
-  // debugger;
 
   const localize = useLocalize();
   const [isDeleting, setIsDeleting] = useState(false);
@@ -124,8 +122,6 @@ export default function DataTable<TData, TValue>({ columns, data }: DataTablePro
     },
   });
 
-  console.log('here1234');
-  console.log(table);
 
   return (
     <div className="flex h-full flex-col gap-4">

@@ -160,9 +160,9 @@ const Nav = memo(
         hasAccessToBookmarks && (
           <>
             <div className="mt-1.5" />
-            <Suspense fallback={null}>
+            {/* <Suspense fallback={null}>
               <BookmarkNav tags={tags} setTags={setTags} isSmallScreen={isSmallScreen} />
-            </Suspense>
+            </Suspense> */}
           </>
         ),
       [hasAccessToBookmarks, tags, isSmallScreen],

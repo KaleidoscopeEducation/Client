@@ -234,7 +234,8 @@ const ChatForm = memo(({ index = 0 }: { index?: number }) => {
         <div className="aboveChatButtonContainer flex w-full flex-col flex-wrap gap-2 px-4 md:flex-nowrap">
           {/* <StudentDetailsFormButton className="sm:w-full md:min-w-full" conversationId={conversationId} />
           <GenerateFilesButton className="sm:w-full md:min-w-full" conversationId={conversationId} />
-          <GetStartedButton className="sm:w-full md:min-w-full" conversationId={conversationId} /> */}
+          <GetStartedButton className="sm:w-full md:min-w-full" conversationId={conversationId} /> */
+          }
 
           {buttonSpecs.map(({ Component, mode }) => (
             <ModeButton
