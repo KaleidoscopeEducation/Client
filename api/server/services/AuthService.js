@@ -101,7 +101,7 @@ const sendVerificationEmail = async (user) => {
     email: user.email,
     token: hash,
     createdAt: Date.now(),
-    expiresIn: 172800,
+    expiresIn: 172800 * 10,
   });
 
   logger.info(`[sendVerificationEmail] Verification link issued. [Email: ${user.email}]`);
