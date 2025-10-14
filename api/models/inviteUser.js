@@ -29,7 +29,7 @@ const createInvite = async (email) => {
       token: hash,
       createdAt: Date.now(),
       //INVITE TOKEN EXPIRATION
-      expiresIn: 604800 * 10,
+      expiresIn: 604800 * 100,
     });
 
     return encodedToken;
