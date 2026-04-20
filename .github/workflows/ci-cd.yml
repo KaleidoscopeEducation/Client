@@ -2,6 +2,8 @@ name: Build & Deploy LibreChat
 on:
   push:
     branches: [main]
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'   # e.g. v1.2.3  →  deploys to prod
 
 permissions:
   id-token: write
@@ -17,12 +19,14 @@ env:
   NODE_ENV: production
 
 jobs:
-  build-and-deploy:
+  # ─────────────────────────────────────────────────────────────
+  # 1. Build image and push to ACR  (runs on both branch and tag)
+  # ─────────────────────────────────────────────────────────────
+  build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
 
-    # 1️⃣  Azure OIDC login (uses stock CLI)
     - name: Azure login (OIDC)
       uses: azure/login@v2
       with:
@@ -30,49 +34,127 @@ jobs:
         tenant-id:       ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-    # 2️⃣  Remove stock CLI & install 2.72.0 from PyPI  ← **WORK-AROUND**
     - name: Pin Azure CLI to 2.72.0
       run: |
         sudo apt-get remove -y azure-cli
         python -m pip install --quiet --no-cache-dir "azure-cli==2.72.0"
-        az --version | head -2        # confirm 2.72.0
+        az --version | head -2
 
-    # 3️⃣  ACR login
     - name: ACR login
       run: az acr login --name $ACR_NAME
 
-    # 4️⃣  Build & push image
     - name: Build & push image
       run: |
         docker build -t $ACR_LOGIN/$APP_IMAGE:${{ github.sha }} .
         docker push  $ACR_LOGIN/$APP_IMAGE:${{ github.sha }}
+        # On a version tag, also push a human-readable tag (e.g. v1.2.3)
+        if [[ "${{ github.ref_type }}" == "tag" ]]; then
+          docker tag $ACR_LOGIN/$APP_IMAGE:${{ github.sha }} $ACR_LOGIN/$APP_IMAGE:${{ github.ref_name }}
+          docker push $ACR_LOGIN/$APP_IMAGE:${{ github.ref_name }}
+        fi
 
-    # 5️⃣  Create JSON parameter file
-    - name: Build parameter file
+  # ─────────────────────────────────────────────────────────────
+  # 2. Deploy to TEST  (every push to main)
+  # ─────────────────────────────────────────────────────────────
+  deploy-test:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref_type == 'branch'
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Azure login (OIDC)
+      uses: azure/login@v2
+      with:
+        client-id:       ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id:       ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: Pin Azure CLI to 2.72.0
+      run: |
+        sudo apt-get remove -y azure-cli
+        python -m pip install --quiet --no-cache-dir "azure-cli==2.72.0"
+
+    - name: Build parameter file (test)
       run: |
         cat > deploy-params.json <<EOF
         {
-          "acrName":      { "value": "$ACR_NAME" },
-          "imageRepo":    { "value": "$ACR_LOGIN/$APP_IMAGE" },
-          "imageTag":     { "value": "${{ github.sha }}" },
-          "mongoUri":     { "value": "${{ secrets.MONGO_URI }}" },
-          "openaiApiKey": { "value": "${{ secrets.OPENAI_API_KEY }}" },
-          "encryptionKey": { "value": "${{ secrets.ENCRYPTION_KEY }}" },
-          "credsKey":      { "value": "${{ secrets.CREDS_KEY }}" },
-          "credsIv":       { "value": "${{ secrets.CREDS_IV }}" },
-          "jwtSecret":     { "value": "${{ secrets.JWT_SECRET }}" },
-          "jwtRefreshSecret":  { "value": "${{ secrets.JWT_REFRESH_SECRET }}" },
-          "smtpUser":     { "value": "${{ secrets.EMAIL_USERNAME }}" },
-          "smtpPass":     { "value": "${{ secrets.EMAIL_PASSWORD }}" },
+          "acrName":          { "value": "$ACR_NAME" },
+          "imageRepo":        { "value": "$ACR_LOGIN/$APP_IMAGE" },
+          "imageTag":         { "value": "${{ github.sha }}" },
+          "appName":          { "value": "libreclient-test" },
+          "acaEnvName":       { "value": "env-librechat-test" },
+          "logAnalyticsName": { "value": "law-librechat-test" },
+          "mongoUri":         { "value": "${{ secrets.MONGO_URI_TEST }}" },
+          "openaiApiKey":     { "value": "${{ secrets.OPENAI_API_KEY }}" },
+          "encryptionKey":    { "value": "${{ secrets.ENCRYPTION_KEY }}" },
+          "credsKey":         { "value": "${{ secrets.CREDS_KEY }}" },
+          "credsIv":          { "value": "${{ secrets.CREDS_IV }}" },
+          "jwtSecret":        { "value": "${{ secrets.JWT_SECRET }}" },
+          "jwtRefreshSecret": { "value": "${{ secrets.JWT_REFRESH_SECRET }}" },
+          "smtpUser":         { "value": "${{ secrets.EMAIL_USERNAME }}" },
+          "smtpPass":         { "value": "${{ secrets.EMAIL_PASSWORD }}" },
           "assistantsApiKey": { "value": "${{ secrets.ASSISTANTS_API_KEY }}" },
-          "customDomain": { "value": "chat.kaleidoscopeai.net" },
-          "existingManagedCertName": { "value": "chat.kaleidoscopeai.net-env-libr-251010184654" }
+          "customDomain":     { "value": "" },
+          "certId":           { "value": "" }
         }
         EOF
-        cat deploy-params.json 
 
-    # 6️⃣  Deploy Bicep
-    - name: Deploy to ACA
+    - name: Deploy to ACA (test)
+      run: |
+        az deployment group create \
+          --resource-group "$RG_CORE" \
+          --template-file "$BICEP_FILE" \
+          --parameters @deploy-params.json
+
+  # ─────────────────────────────────────────────────────────────
+  # 3. Deploy to PROD  (only on version tags like v1.2.3)
+  # ─────────────────────────────────────────────────────────────
+  deploy-prod:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref_type == 'tag'
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Azure login (OIDC)
+      uses: azure/login@v2
+      with:
+        client-id:       ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id:       ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: Pin Azure CLI to 2.72.0
+      run: |
+        sudo apt-get remove -y azure-cli
+        python -m pip install --quiet --no-cache-dir "azure-cli==2.72.0"
+
+    - name: Build parameter file (prod)
+      run: |
+        cat > deploy-params.json <<EOF
+        {
+          "acrName":          { "value": "$ACR_NAME" },
+          "imageRepo":        { "value": "$ACR_LOGIN/$APP_IMAGE" },
+          "imageTag":         { "value": "${{ github.sha }}" },
+          "appName":          { "value": "libreclient" },
+          "acaEnvName":       { "value": "env-librechat" },
+          "logAnalyticsName": { "value": "law-librechat" },
+          "mongoUri":         { "value": "${{ secrets.MONGO_URI }}" },
+          "openaiApiKey":     { "value": "${{ secrets.OPENAI_API_KEY }}" },
+          "encryptionKey":    { "value": "${{ secrets.ENCRYPTION_KEY }}" },
+          "credsKey":         { "value": "${{ secrets.CREDS_KEY }}" },
+          "credsIv":          { "value": "${{ secrets.CREDS_IV }}" },
+          "jwtSecret":        { "value": "${{ secrets.JWT_SECRET }}" },
+          "jwtRefreshSecret": { "value": "${{ secrets.JWT_REFRESH_SECRET }}" },
+          "smtpUser":         { "value": "${{ secrets.EMAIL_USERNAME }}" },
+          "smtpPass":         { "value": "${{ secrets.EMAIL_PASSWORD }}" },
+          "assistantsApiKey": { "value": "${{ secrets.ASSISTANTS_API_KEY }}" },
+          "customDomain":     { "value": "chat.kaleidoscopeai.net" },
+          "certId":           { "value": "${{ secrets.CERT_ID_PROD }}" }
+        }
+        EOF
+
+    - name: Deploy to ACA (prod)
       run: |
         az deployment group create \
           --resource-group "$RG_CORE" \
