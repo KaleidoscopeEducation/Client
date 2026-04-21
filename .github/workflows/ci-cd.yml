@@ -80,7 +80,6 @@ jobs:
         cat > deploy-params.json <<EOF
         {
           "acrName":          { "value": "$ACR_NAME" },
-          "imageRepo":        { "value": "$ACR_LOGIN/$APP_IMAGE" },
           "imageTag":         { "value": "${{ github.sha }}" },
           "appName":          { "value": "libreclient-test" },
           "acaEnvName":       { "value": "env-librechat-test" },
@@ -134,7 +133,6 @@ jobs:
         cat > deploy-params.json <<EOF
         {
           "acrName":          { "value": "$ACR_NAME" },
-          "imageRepo":        { "value": "$ACR_LOGIN/$APP_IMAGE" },
           "imageTag":         { "value": "${{ github.sha }}" },
           "appName":          { "value": "libreclient" },
           "acaEnvName":       { "value": "env-librechat" },

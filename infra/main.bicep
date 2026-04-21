@@ -24,9 +24,6 @@ param customDomain string = ''
 @description('Full resource ID of the managed certificate (required when customDomain is set)')
 param certId string = ''
 
-@description('Repository part of the image, e.g. "<acr>.azurecr.io/libreclient"')
-param imageRepo string
-
 @description('Tag pushed by the workflow (Git SHA)')
 param imageTag string
 
@@ -78,6 +75,22 @@ resource acr 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' existin
   name: acrName
 }
 
+// ========== User-assigned identity (created before the app so AcrPull is ready on first pull) ==========
+resource appIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
+  name: 'id-${appName}'
+  location: location
+}
+
+resource acrPullRA 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(acr.id, appName, 'AcrPull')
+  scope: acr
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', acrPullRoleId)
+    principalId:      appIdentity.properties.principalId
+    principalType:    'ServicePrincipal'
+  }
+}
+
 // ========== Log Analytics ==========
 resource logWs 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
   name: logAnalyticsName
@@ -91,9 +104,6 @@ resource logWs 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
 resource env 'Microsoft.App/managedEnvironments@2025-01-01' = {
   name: acaEnvName
   location: location
-  identity: {
-    type: 'SystemAssigned'
-  }
   properties: {
     appLogsConfiguration: {
       destination: 'log-analytics'
@@ -109,9 +119,15 @@ resource env 'Microsoft.App/managedEnvironments@2025-01-01' = {
 resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
   name: appName
   location: location
+  // User-assigned identity is used for ACR pulls; created and granted AcrPull before this resource
   identity: {
-    type: 'SystemAssigned'
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${appIdentity.id}': {}
+    }
   }
+  // Ensure role assignment has propagated before the first revision tries to pull
+  dependsOn: [acrPullRA]
   properties: {
     managedEnvironmentId: env.id
     configuration: {
@@ -119,7 +135,6 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
         external: true
         targetPort: 3080
         allowInsecure: false
-        // customDomains only wired up when a domain + cert are provided (prod)
         customDomains: empty(customDomain) ? [] : [
           {
             name: customDomain
@@ -131,7 +146,7 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
       registries: [
         {
           server: acrLoginServer
-          identity: 'system' // ACA pulls with its own MSI
+          identity: appIdentity.id
         }
       ]
       secrets: [
@@ -201,17 +216,6 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
         ]
       }
     }
-  }
-}
-
-// Grant the container app's managed identity permission to pull from ACR
-resource acrPullRA 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
-  name: guid(acr.id, appName, 'AcrPull')
-  scope: acr
-  properties: {
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', acrPullRoleId)
-    principalId:      app.identity.principalId
-    principalType:    'ServicePrincipal'
   }
 }
 
