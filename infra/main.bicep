@@ -24,6 +24,9 @@ param customDomain string = ''
 @description('Full resource ID of the managed certificate (required when customDomain is set)')
 param certId string = ''
 
+@description('Value for DOMAIN_CLIENT env var — use the custom domain for prod, the ACA-assigned URL for test')
+param domainClient string = ''
+
 @description('Tag pushed by the workflow (Git SHA)')
 param imageTag string
 
@@ -197,7 +200,7 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
             { name: 'APP_TITLE',                    value: 'Kaleidoscope' }
             { name: 'CUSTOM_FOOTER',                value: 'Kaleidoscope 2025' }
             { name: 'HELP_AND_FAQ_URL',             value: 'https://app.kaleidoscopeai.net/?stay=yes' }
-            { name: 'DOMAIN_CLIENT',                value: empty(customDomain) ? '' : 'https://${customDomain}' }
+            { name: 'DOMAIN_CLIENT',                value: domainClient }
           ]
         }
       ]
