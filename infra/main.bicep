@@ -203,5 +203,16 @@ resource app 'Microsoft.App/containerApps@2025-02-02-preview' = {
   }
 }
 
+// Grant the container app's managed identity permission to pull from ACR
+resource acrPullRA 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
+  name: guid(acr.id, appName, 'AcrPull')
+  scope: acr
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', acrPullRoleId)
+    principalId:      app.identity.principalId
+    principalType:    'ServicePrincipal'
+  }
+}
+
 // ========== Outputs ==========
 output containerAppUrl string = app.properties.configuration.ingress.fqdn
