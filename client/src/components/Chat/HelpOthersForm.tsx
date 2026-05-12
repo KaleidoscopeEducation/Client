@@ -17,6 +17,16 @@ const guidanceItems = [
   'Any relevant context — family situation, language, cultural background, economic stress',
 ];
 
+const text = {
+  nameLabel: 'Student name',
+  optional: '(optional)',
+  gradeLabel: 'Age or grade level',
+  infoLabel: 'Tell us about this student',
+  guidanceTitle: 'Consider sharing',
+  footerNote: 'The more you share, the more personalized the support will be.',
+  submit: 'Get started',
+};
+
 const buildMessage = ({ studentName, studentGrade, studentInfo }: HelpOthersFormData) => {
   const name = studentName.trim();
   const grade = studentGrade.trim();
@@ -31,7 +41,7 @@ const buildMessage = ({ studentName, studentGrade, studentInfo }: HelpOthersForm
 };
 
 export default function HelpOthersForm() {
-  const { register, handleSubmit, setFocus, getValues } = useForm<HelpOthersFormData>({
+  const { register, handleSubmit, setFocus } = useForm<HelpOthersFormData>({
     defaultValues: { studentName: '', studentGrade: '', studentInfo: '' },
   });
   const { submitMessage } = useSubmitMessage();
@@ -58,7 +68,10 @@ export default function HelpOthersForm() {
             htmlFor="help-others-student-name"
             className="text-xs font-medium uppercase tracking-wide text-text-secondary"
           >
-            Student name <span className="font-normal normal-case tracking-normal text-text-tertiary">(optional)</span>
+            {text.nameLabel}{' '}
+            <span className="font-normal normal-case tracking-normal text-text-tertiary">
+              {text.optional}
+            </span>
           </label>
           <Input
             id="help-others-student-name"
@@ -74,7 +87,7 @@ export default function HelpOthersForm() {
             htmlFor="help-others-student-grade"
             className="text-xs font-medium uppercase tracking-wide text-text-secondary"
           >
-            Age or grade level
+            {text.gradeLabel}
           </label>
           <Input
             id="help-others-student-grade"
@@ -93,12 +106,12 @@ export default function HelpOthersForm() {
         htmlFor="help-others-student-info"
         className="mb-2 block text-xs font-medium uppercase tracking-wide text-text-secondary"
       >
-        Tell us about this student
+        {text.infoLabel}
       </label>
 
       <div className="mb-3 rounded-md border-l-2 border-surface-submit bg-surface-secondary px-3.5 py-3">
         <div className="mb-2 text-[0.7rem] font-medium uppercase tracking-wider text-text-secondary">
-          Consider sharing
+          {text.guidanceTitle}
         </div>
         <ul className="flex flex-col gap-1.5">
           {guidanceItems.map((item, i) => (
@@ -121,11 +134,9 @@ export default function HelpOthersForm() {
       />
 
       <div className="mt-5 flex flex-col items-end gap-3 border-t border-border-light pt-4 sm:flex-row sm:items-center sm:justify-between">
-        <p className="max-w-[14rem] text-xs leading-snug text-text-tertiary">
-          The more you share, the more personalized the support will be.
-        </p>
+        <p className="max-w-[14rem] text-xs leading-snug text-text-tertiary">{text.footerNote}</p>
         <Button type="submit" variant="submit" className="gap-2">
-          Get started
+          {text.submit}
           <ArrowRight className="h-4 w-4" />
         </Button>
       </div>

@@ -77,6 +77,13 @@ function ChatView({ index = 0 }: { index?: number }) {
 
   const hideChatForm = isLandingPage && mode === 'student';
 
+  let landingContainerClass = 'h-full overflow-y-auto';
+  if (isLandingPage && hideChatForm) {
+    landingContainerClass = 'flex-1 items-center justify-start overflow-y-auto pt-12';
+  } else if (isLandingPage) {
+    landingContainerClass = 'flex-1 items-center justify-end overflow-y-auto sm:justify-center';
+  }
+
   return (
     <ChatFormProvider {...methods}>
       <ChatContext.Provider value={chatHelpers}>
@@ -85,16 +92,7 @@ function ChatView({ index = 0 }: { index?: number }) {
             <div className="flex h-full w-full flex-col">
               {!isLoading && <Header />}
               <>
-                <div
-                  className={cn(
-                    'flex flex-col',
-                    isLandingPage
-                      ? hideChatForm
-                        ? 'flex-1 items-center justify-start overflow-y-auto pt-12'
-                        : 'flex-1 items-center justify-end overflow-y-auto sm:justify-center'
-                      : 'h-full overflow-y-auto',
-                  )}
-                >
+                <div className={cn('flex flex-col', landingContainerClass)}>
                   {content}
                   <div
                     className={cn(
@@ -103,7 +101,7 @@ function ChatView({ index = 0 }: { index?: number }) {
                     )}
                   >
                     {!hideChatForm && <ChatForm index={index} mode={mode} />}
-                    {isLandingPage ? (!hideChatForm && <ConversationStarters />) : <Footer />}
+                    {isLandingPage ? !hideChatForm && <ConversationStarters /> : <Footer />}
                   </div>
                 </div>
                 {isLandingPage && <Footer />}

@@ -117,8 +117,6 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
     setLineCount(count);
   }, []);
 
-
-
   const getDynamicMargin = useMemo(() => {
     let margin = 'mb-0';
 
@@ -174,7 +172,6 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
     subheaderText = helpOthersSubheader;
   } else if (mode === 'classroom') {
     greetingText = classroomGreeting;
-
   } else if (mode === 'start') {
     greetingText = startGreeting;
     subheaderText = selfHelpSubheader;
@@ -277,7 +274,7 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
 
         {bulletPoints && (
           <div className="mt-3 w-full">
-            <div className="mx-auto max-w-[48ch] md:max-w-[92ch] flex flex-wrap justify-center gap-2">
+            <div className="mx-auto flex max-w-[48ch] flex-wrap justify-center gap-2 md:max-w-[92ch]">
               {bulletPoints.map((point, i) => (
                 <span
                   key={i}
