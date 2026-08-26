@@ -9,6 +9,14 @@ const { createToken, findToken } = require('~/models');
  */
 
 /**
+ * @function normalizeEmail
+ * @description Normalizes an email for case-insensitive comparison
+ * @param {string} email - The email to normalize
+ * @returns {string} The trimmed, lowercased email, or an empty string if not a string
+ */
+const normalizeEmail = (email) => (typeof email === 'string' ? email.trim().toLowerCase() : '');
+
+/**
  * @function createInvite
  * @description This function creates a new user invite
  * @param {string} email - The email of the user to invite
@@ -25,7 +33,7 @@ const createInvite = async (email) => {
 
     await createToken({
       userId: fakeUserId,
-      email,
+      email: normalizeEmail(email),
       token: hash,
       createdAt: Date.now(),
       //INVITE TOKEN EXPIRATION
@@ -41,7 +49,9 @@ const createInvite = async (email) => {
 
 /**
  * @function getInvite
- * @description This function retrieves a user invite
+ * @description This function retrieves a user invite. The email is matched
+ * case-insensitively so the invitee does not have to reproduce the exact casing
+ * used when the invite was sent.
  * @param {string} encodedToken - The token of the invite to retrieve
  * @param {string} email - The email of the user to validate
  * @returns {Promise<Object>} A promise that resolves to the retrieved invite document
@@ -51,9 +61,9 @@ const getInvite = async (encodedToken, email) => {
   try {
     const token = decodeURIComponent(encodedToken);
     const hash = await hashToken(token);
-    const invite = await findToken({ token: hash, email });
+    const invite = await findToken({ token: hash });
 
-    if (!invite) {
+    if (!invite || normalizeEmail(invite.email) !== normalizeEmail(email)) {
       throw new Error('Invite not found or email does not match');
     }
 
